@@ -903,7 +903,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.07b01";
+		String Revision = "Revision 2012.07b01-git";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
