@@ -35,8 +35,6 @@ class JabberBot implements Runnable
     String Domain = account.Domain;
     String mucName = account.mucName;
     
-    String I_Am_A_change;
-    
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
 			"Подписка на ленту новостей:\n" +
