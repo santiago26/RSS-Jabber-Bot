@@ -706,7 +706,19 @@ class JabberBot implements Runnable
             			db.addUser(new_user,0);
             		}
 				}
-				public void entriesDeleted(Collection<String> addresses){}
+				public void entriesDeleted(Collection<String> addresses){
+					for (String leaving_user : addresses) {
+            			if (!db.isUser(leaving_user)) addresses.remove(leaving_user);
+            		}
+            		if (addresses.size()==0) return;
+            		LOG.info("//////////////////////////////////////////////////////////");
+            		LOG.info("Removing account: "+addresses);
+            		LOG.info("//////////////////////////////////////////////////////////");
+            		for (String leaving_user : addresses) {
+            			sendMessage(leaving_user, "Прощайте");
+            			db.remUser(leaving_user);
+            		}
+				}
                 public void entriesUpdated(Collection<String> addresses){}
                 public void presenceChanged(Presence presence){/*System.out.println("Presence changed: " + presence.getFrom() + " " + presence);*/}
             });
