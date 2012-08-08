@@ -316,6 +316,7 @@ class JabberBot implements Runnable
                         			}break;
                         			case "noerrors":{
                         				Ignore_errors=!Ignore_errors;
+                        				MessageProcessed = true;
                         			}break;
                         			case "getlink":{
                         				long RSS_id = Long.parseLong(messageBody.substring(messageBody.indexOf(" ")+1));
