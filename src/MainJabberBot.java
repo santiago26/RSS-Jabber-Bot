@@ -207,7 +207,7 @@ class JabberBot implements Runnable
                         		}
 
                         		//command only for admin
-                        		if(JID.equals("commaster@qip.ru")||JID.equals("santiago26@qip.ru"))
+                        		if(JID.equals("commaster@qip.ru"))
                         		{
                         			LOG.info("Is admin");
                         			switch (Command)
@@ -361,10 +361,6 @@ class JabberBot implements Runnable
 
                         					if (data==null)
                         					{
-                        						//sendMessage("santiago26@qip.ru",RSS_id.toString()+" haz problems.");
-                        						//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        						//try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-                        						//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         						sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
                         						//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         						try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
@@ -485,7 +481,7 @@ class JabberBot implements Runnable
                         				{
                         					String idea = messageBody.substring(5).trim();
                         					String FromJID = JID;
-                        					sendMessage("santiago26@qip.ru",FromJID+" предложил такую идею: "+idea);
+                        					sendMessage("commaster@qip.ru",FromJID+" предложил такую идею: "+idea);
                         					sendMessage(FromJID,"Спасибо за твои чудесные идеи, о великий юзер!");
                         					MessageProcessed = true;
                         				}break;
@@ -630,7 +626,7 @@ class JabberBot implements Runnable
                         								case "idea ":{
                         									String idea = messageBody.substring(5).trim();
                         									String FromJID = MUC+"/"+MUser;
-                        									sendMessage("santiago26@qip.ru",FromJID+" предложил такую идею: "+idea);
+                        									sendMessage("commaster@qip.ru",FromJID+" предложил такую идею: "+idea);
                         									sendMUCMessage(MUC,MUser,"Спасибо за твои чудесные идеи, о великий юзер!");
                         									MessageProcessed = true;
                         								}break;
@@ -758,10 +754,6 @@ class JabberBot implements Runnable
         					
         					if (data==null)
         					{
-        						//sendMessage("santiago26@qip.ru",RSS_id.toString()+" haz problems.");
-        						//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    			            	//try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-    			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         						sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
     							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     			            	try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
@@ -915,7 +907,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.07b01-git";
+		String Revision = "Revision 2012.07b02t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
