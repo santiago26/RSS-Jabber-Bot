@@ -30,6 +30,7 @@ class JabberBot implements Runnable
     private XMPPConnection connection;
     private boolean status = true;
     private boolean Stop_refresh = false;
+    private boolean Ignore_errors = false;
     String Login = account.Login;
     String Password = account.Password;
     String Domain = account.Domain;
@@ -312,6 +313,9 @@ class JabberBot implements Runnable
                         					sendMessage(JID,"RSS "+RSS_id+" unlocked.");
                         				}
                         				MessageProcessed = true;
+                        			}break;
+                        			case "noerrors":{
+                        				Ignore_errors=!Ignore_errors;
                         			}break;
                         			case "getlink":{
                         				long RSS_id = Long.parseLong(messageBody.substring(messageBody.indexOf(" ")+1));
@@ -750,7 +754,7 @@ class JabberBot implements Runnable
         					//Получаем одну RSS ленту
         					
         					//Проверяем и получаем новые записи для этой ленты
-        					List<String> data = db.getNew(RSS_id,false);
+        					List<String> data = db.getNew(RSS_id,Ignore_errors);
         					
         					if (data==null)
         					{
@@ -907,7 +911,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.07b02t";
+		String Revision = "Revision 2012.08b01t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
