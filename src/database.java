@@ -144,6 +144,7 @@ class database
 			String RSS_last_thingy;
 			Long RSS_last_timestamp;
 			boolean Already_failed;
+			boolean NSR;
 			synchronized (Mutex) {
 				ResultSet rs;
 				//System.out.println("Entered Mutex Init");
@@ -172,6 +173,7 @@ class database
 				RSS_last_timestamp=rs.getLong("RSS_last_timestamp");
 				rs.getBytes("Syntax_error");
 				Already_failed=(forced || !rs.wasNull());
+				NSR=(rs.getLong("Needs_syntax_recheck")==1);
 				rs.close();
 				//System.out.println("Left Mutex Init");
 				Mutex.notify();
@@ -1132,7 +1134,7 @@ class database
 				}catch (Exception e)
 				{
 					if (Already_failed) {
-						synchronized (Mutex) {
+						if (!NSR) synchronized (Mutex) {
 							System.out.println("Entered Mutex Error");
 							LOG.error(RSS_id+" ("+RSS_link+")");
 							System.out.println("ERROR_FEED:"+e.toString());
@@ -1173,7 +1175,7 @@ class database
 			}catch (Exception e)
 			{
 				if (Already_failed) {
-					synchronized (Mutex) {
+					if (!NSR) synchronized (Mutex) {
 						System.out.println("Entered Mutex Error");
 						LOG.error(RSS_id+" ("+RSS_link+")");
 						System.out.println("ERROR_XML:"+e.toString());
