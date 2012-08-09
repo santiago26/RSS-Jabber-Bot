@@ -156,7 +156,7 @@ class database
 					Mutex.notify();
 					return null;
 				}
-				if (rs.getLong("Needs_syntax_recheck")==1)
+				if ((rs.getLong("Needs_syntax_recheck")==1)&&(!forced))
 				{
 					//System.out.println("Left Mutex Init");
 					Mutex.notify();
