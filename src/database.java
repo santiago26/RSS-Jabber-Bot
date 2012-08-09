@@ -1134,7 +1134,7 @@ class database
 					if (Already_failed) {
 						synchronized (Mutex) {
 							System.out.println("Entered Mutex Error");
-							LOG.error(RSS_id+" ("+RSS_link+") : ERROR_FEED:",e);
+							LOG.error(RSS_id+" ("+RSS_link+")");
 							System.out.println("ERROR_FEED:"+e.toString());
 							st.executeUpdate("UPDATE RSS SET Needs_syntax_recheck=1 WHERE RSS_id="+RSS_id+";");
 							reader.close();
@@ -1146,7 +1146,7 @@ class database
 					else {
 						synchronized (Mutex) {
 							System.out.println("Entered Mutex Warn");
-							LOG.warn("Warning: "+RSS_id+" ("+RSS_link+")");
+							LOG.warn("Warning: "+RSS_id+" ("+RSS_link+") : ERROR_FEED:",e);
 							System.out.println("ERROR_FEED:"+e.toString());
 							PreparedStatement prepError = conn.prepareStatement("UPDATE RSS SET Syntax_error=? WHERE RSS_id="+RSS_id+";");
 							System.out.println("prepError");
@@ -1175,7 +1175,7 @@ class database
 				if (Already_failed) {
 					synchronized (Mutex) {
 						System.out.println("Entered Mutex Error");
-						LOG.error(RSS_id+" ("+RSS_link+") : ERROR_XML:",e);
+						LOG.error(RSS_id+" ("+RSS_link+")");
 						System.out.println("ERROR_XML:"+e.toString());
 						st.executeUpdate("UPDATE RSS SET Needs_syntax_recheck=1 WHERE RSS_id="+RSS_id+";");
 						System.out.println("Left Mutex Error");
@@ -1186,7 +1186,7 @@ class database
 				else {
 					synchronized (Mutex) {
 						System.out.println("Entered Mutex Warn");
-						LOG.warn("Warning: "+RSS_id+" ("+RSS_link+")");
+						LOG.warn("Warning: "+RSS_id+" ("+RSS_link+") : ERROR_XML:",e);
 						System.out.println("ERROR_XML:"+e.toString());
 						PreparedStatement prepError = conn.prepareStatement("UPDATE RSS SET Syntax_error=? WHERE RSS_id="+RSS_id+";");
 						System.out.println("prepError");
