@@ -31,6 +31,7 @@ class JabberBot implements Runnable
     private boolean status = true;
     private boolean Stop_refresh = false;
     private boolean Ignore_errors = false;
+    private String TransferName = "";
     String Login = account.Login;
     String Password = account.Password;
     String Domain = account.Domain;
@@ -724,6 +725,38 @@ class JabberBot implements Runnable
                 public void entriesUpdated(Collection<String> addresses){}
                 public void presenceChanged(Presence presence){/*System.out.println("Presence changed: " + presence.getFrom() + " " + presence);*/}
             });
+            
+            final FileTransferManager RUManager = new FileTransferManager(connection);//Remote Update Manager
+            RUManager.addFileTransferListener(new FileTransferListener() {
+				public void fileTransferRequest(FileTransferRequest request) {
+					//if (request.getRequestor().substring(0, request.getRequestor().indexOf('/')).equalsIgnoreCase("commaster@qip.ru"))
+					if (!(TransferName.isEmpty()))
+					{
+						IncomingFileTransfer RUTransfer = request.accept();
+						try {
+							RUTransfer.recieveFile(new File(TransferName));
+							while(!RUTransfer.isDone()) {
+								if(RUTransfer.getStatus().equals(Status.error)) {
+									System.out.println("ERROR!!! " + RUTransfer.getError());
+					            } else {
+					                System.out.println(RUTransfer.getStatus());
+					                System.out.println(RUTransfer.getProgress());
+					            }
+								//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+								try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
+								//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					        }
+							sendMessage(request.getRequestor(),"Удаленное обновление завершено успешно.");
+							TransferName = "";
+						} catch(XMPPException e) {
+							LOG.error("ERROR_RUT("+request.getRequestor()+"):",e);
+							sendMessage(request.getRequestor(),"Не удалось произвести обновление, попробуйте еще раз.");
+							TransferName = "";
+						}
+					}
+					else {request.reject();}
+				}
+            });
             //LOG.info("Listeners up...");
             
             //Заходим в конференции
@@ -913,7 +946,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b04t";
+		String Revision = "Revision 2012.08b05t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
