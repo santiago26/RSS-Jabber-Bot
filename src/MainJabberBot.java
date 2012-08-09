@@ -427,15 +427,7 @@ class JabberBot implements Runnable
                         				OutgoingFileTransfer logTransfer = logTManager.createOutgoingFileTransfer(JID+"/"+Resource);
                         				try {
 											logTransfer.sendFile(new File("log.cpp"), "Latest log file");
-											while (!logTransfer.isDone()) {
-												if(logTransfer.getStatus().equals(Status.error)) {
-									                  System.out.println("ERROR!!! " + logTransfer.getError());
-									            } else {
-									                  System.out.println(logTransfer.getStatus());
-									                  System.out.println(logTransfer.getProgress());
-									            }
-												try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-											}
+											while (!logTransfer.isDone()) {}
 										}catch (XMPPException e){sendMessage(JID,"Передача не удалась");}
                         				sendMessage(JID,"Передача завершена");
                         				MessageProcessed = true;
