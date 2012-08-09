@@ -757,9 +757,9 @@ class JabberBot implements Runnable
         					//Проверяем и получаем новые записи для этой ленты
         					List<String> data = db.getNew(RSS_id,Ignore_errors);
         					
-        					if ((data==null)&&(!Ignore_errors))
+        					if (data==null)
         					{
-        						sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
+        						if (!Ignore_errors) sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
     							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     			            	try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
     			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
