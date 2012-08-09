@@ -16,7 +16,7 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 
 import org.jivesoftware.smackx.filetransfer.*;
-//import org.jivesoftware.smackx.filetransfer.FileTransfer.*;
+import org.jivesoftware.smackx.filetransfer.FileTransfer.*;
 import org.jivesoftware.smackx.muc.*;
 
 import org.apache.log4j.Logger;
@@ -120,6 +120,7 @@ class JabberBot implements Runnable
 	public void run()
 	{
 		LOG.info("Run JabberBot thread...");
+		SmackConfiguration.setLocalSocks5ProxyPort(13666);//!!!IMPORTANT!!!
 		//Connection.DEBUG_ENABLED=true;
 		connConfig = new ConnectionConfiguration("webim.qip.ru",5222,Domain);
 		SASLAuthentication.supportSASLMechanism("PLAIN");
@@ -426,7 +427,15 @@ class JabberBot implements Runnable
                         				OutgoingFileTransfer logTransfer = logTManager.createOutgoingFileTransfer(JID+"/"+Resource);
                         				try {
 											logTransfer.sendFile(new File("log.cpp"), "Latest log file");
-											while (!logTransfer.isDone()){}
+											while (!logTransfer.isDone()) {
+												if(logTransfer.getStatus().equals(Status.error)) {
+									                  System.out.println("ERROR!!! " + logTransfer.getError());
+									            } else {
+									                  System.out.println(logTransfer.getStatus());
+									                  System.out.println(logTransfer.getProgress());
+									            }
+												try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+											}
 										}catch (XMPPException e){sendMessage(JID,"Передача не удалась");}
                         				sendMessage(JID,"Передача завершена");
                         				MessageProcessed = true;
@@ -912,7 +921,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b03t";
+		String Revision = "Revision 2012.08b04t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
