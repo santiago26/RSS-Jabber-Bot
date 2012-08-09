@@ -757,7 +757,7 @@ class JabberBot implements Runnable
         					//Проверяем и получаем новые записи для этой ленты
         					List<String> data = db.getNew(RSS_id,Ignore_errors);
         					
-        					if (data==null)
+        					if ((data==null)&&(!Ignore_errors))
         					{
         						sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
     							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -912,7 +912,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b01t";
+		String Revision = "Revision 2012.08b02t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
