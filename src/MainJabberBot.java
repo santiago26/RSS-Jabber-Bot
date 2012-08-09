@@ -433,6 +433,11 @@ class JabberBot implements Runnable
                         				sendMessage(JID,"Передача завершена");
                         				MessageProcessed = true;
                         			}break;
+                        			case "ru":{
+                        				TransferName = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
+                        				sendMessage(JID,"Remote Update of "+TransferName+" armed!");
+                        				MessageProcessed = true;
+                        			}break;
                         			}
                         		}
                         		//common commands for all
