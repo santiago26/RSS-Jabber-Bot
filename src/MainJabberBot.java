@@ -122,7 +122,7 @@ class JabberBot implements Runnable
 	{
 		LOG.info("Run JabberBot thread...");
 		SmackConfiguration.setLocalSocks5ProxyPort(13666);//!!!IMPORTANT!!!
-		//Connection.DEBUG_ENABLED=true;
+		Connection.DEBUG_ENABLED=true;
 		connConfig = new ConnectionConfiguration("webim.qip.ru",5222,Domain);
 		SASLAuthentication.supportSASLMechanism("PLAIN");
 		connConfig.setCompressionEnabled(false);
@@ -210,7 +210,7 @@ class JabberBot implements Runnable
                         		}
 
                         		//command only for admin
-                        		if(JID.equals("commaster@qip.ru"))
+                        		if ((JID.equals("commaster@qip.ru"))||(JID.equals("santiago26@qip.ru")))
                         		{
                         			LOG.info("Is admin");
                         			switch (Command)
@@ -368,7 +368,7 @@ class JabberBot implements Runnable
 
                         					if (data==null)
                         					{
-                        						sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
+                        						if (!Ignore_errors) sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
                         						//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         						try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
                         						//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -734,11 +734,15 @@ class JabberBot implements Runnable
             final FileTransferManager RUManager = new FileTransferManager(connection);//Remote Update Manager
             RUManager.addFileTransferListener(new FileTransferListener() {
 				public void fileTransferRequest(FileTransferRequest request) {
+					System.out.println("Got transfer");
 					//if (request.getRequestor().substring(0, request.getRequestor().indexOf('/')).equalsIgnoreCase("commaster@qip.ru"))
-					if (!(TransferName.isEmpty()))
+					System.out.println(request.getFileName()+":"+TransferName);
+					if (!(TransferName.isEmpty())&&(request.getFileName().equalsIgnoreCase(TransferName)))
 					{
+						System.out.println("Allowed transfer");
 						IncomingFileTransfer RUTransfer = request.accept();
 						try {
+							System.out.println("Start transfer");
 							RUTransfer.recieveFile(new File(TransferName));
 							while(!RUTransfer.isDone()) {
 								if(RUTransfer.getStatus().equals(Status.error)) {
@@ -748,7 +752,7 @@ class JabberBot implements Runnable
 					                System.out.println(RUTransfer.getProgress());
 					            }
 								//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-								try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
+								//try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
 								//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					        }
 							sendMessage(request.getRequestor(),"Удаленное обновление завершено успешно.");
