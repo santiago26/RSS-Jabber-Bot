@@ -424,7 +424,7 @@ class database
 							//Сохраняем новую дату публикации
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex refresh");
-								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_timestamp="+Update+", RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL WHERE RSS_id="+RSS_id+";");
+								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_timestamp="+Update+", RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL, Needs_syntax_recheck=0 WHERE RSS_id="+RSS_id+";");
 								try {
 									prepUpdate.setBytes(1, Content.getBytes("UTF-8"));
 									prepUpdate.setBytes(2, Contentbb.getBytes("UTF-8"));
@@ -651,7 +651,7 @@ class database
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex Refresh");
 								Update=Update.replaceAll("'", "''");
-								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_thingy='"+Update+"', RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL WHERE RSS_id="+RSS_id+";");
+								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_thingy='"+Update+"', RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL, Needs_syntax_recheck=0 WHERE RSS_id="+RSS_id+";");
 								Update=Update.replaceAll("''", "'");
 								try {
 									prepUpdate.setBytes(1, Content.getBytes("UTF-8"));
@@ -879,7 +879,7 @@ class database
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex Refresh");
 								Update=Update.replaceAll("'", "''");
-								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_thingy='"+Update+"', RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL WHERE RSS_id="+RSS_id+";");
+								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_thingy='"+Update+"', RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL, Needs_syntax_recheck=0 WHERE RSS_id="+RSS_id+";");
 								Update=Update.replaceAll("''", "'");
 								try {
 									prepUpdate.setBytes(1, Content.getBytes("UTF-8"));
@@ -1113,7 +1113,7 @@ class database
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex Refresh");
 								Update=Update.replaceAll("'", "''");
-								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_thingy='"+Update+"', RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL WHERE RSS_id="+RSS_id+";");
+								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_thingy='"+Update+"', RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL, Needs_syntax_recheck=0 WHERE RSS_id="+RSS_id+";");
 								Update=Update.replaceAll("''", "'");
 								try {
 									prepUpdate.setBytes(1, Content.getBytes("UTF-8"));
@@ -1138,7 +1138,18 @@ class database
 							System.out.println("Entered Mutex Error");
 							LOG.error(RSS_id+" ("+RSS_link+")");
 							System.out.println("ERROR_FEED:"+e.toString());
-							st.executeUpdate("UPDATE RSS SET Needs_syntax_recheck=1 WHERE RSS_id="+RSS_id+";");
+							PreparedStatement prepError = conn.prepareStatement("UPDATE RSS SET Syntax_error=?, Needs_syntax_recheck=1 WHERE RSS_id="+RSS_id+";");
+							System.out.println("prepError");
+							String Syntax_error="";
+							Syntax_error+="ERROR_FEED:";
+							Syntax_error+=e.toString();
+							for (StackTraceElement STE : e.getStackTrace()){
+								Syntax_error += "\nat "+STE.toString();
+							}
+							try {
+								prepError.setBytes(1, Syntax_error.getBytes("UTF-8"));
+							}catch(UnsupportedEncodingException e1){LOG.info(RSS_id+"("+RSS_link+")");LOG.error("ERROR_ERROR:",e1);}
+							prepError.execute();
 							reader.close();
 							System.out.println("Left Mutex Error");
 							Mutex.notify();
@@ -1179,7 +1190,18 @@ class database
 						System.out.println("Entered Mutex Error");
 						LOG.error(RSS_id+" ("+RSS_link+")");
 						System.out.println("ERROR_XML:"+e.toString());
-						st.executeUpdate("UPDATE RSS SET Needs_syntax_recheck=1 WHERE RSS_id="+RSS_id+";");
+						PreparedStatement prepError = conn.prepareStatement("UPDATE RSS SET Syntax_error=?, Needs_syntax_recheck=1 WHERE RSS_id="+RSS_id+";");
+						System.out.println("prepError");
+						String Syntax_error="";
+						Syntax_error+="ERROR_FEED:";
+						Syntax_error+=e.toString();
+						for (StackTraceElement STE : e.getStackTrace()){
+							Syntax_error += "\nat "+STE.toString();
+						}
+						try {
+							prepError.setBytes(1, Syntax_error.getBytes("UTF-8"));
+						}catch(UnsupportedEncodingException e1){LOG.info(RSS_id+"("+RSS_link+")");LOG.error("ERROR_ERROR:",e1);}
+						prepError.execute();
 						System.out.println("Left Mutex Error");
 						Mutex.notify();
 					}
@@ -1558,9 +1580,15 @@ class database
 		{
 			synchronized (Mutex)
 			{
-				rs = st.executeQuery("SELECT Syntax_error FROM RSS WHERE RSS_id="+RSS_id+" AND Needs_syntax_recheck=1;");
+				rs = st.executeQuery("SELECT Syntax_error FROM RSS WHERE RSS_id="+RSS_id+";");
 				if (rs.next())
 				{
+					rs.getBytes("Syntax_error");
+					if (rs.wasNull()) {
+						rs.close();
+						Mutex.notify();
+						return "No such brocken feed!";
+					}
 					String message = new String(rs.getBytes("Syntax_error"),"UTF-8");
 					rs.close();
 					Mutex.notify();
@@ -1570,7 +1598,7 @@ class database
 				{
 					rs.close();
 					Mutex.notify();
-					return "No such feed!";
+					return "No such brocken feed!";
 				}
 			}
 		}catch(SQLException e){LOG.error("ERROR_SQL:",e);}

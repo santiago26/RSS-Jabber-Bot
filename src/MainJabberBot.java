@@ -122,7 +122,7 @@ class JabberBot implements Runnable
 	{
 		LOG.info("Run JabberBot thread...");
 		SmackConfiguration.setLocalSocks5ProxyPort(13666);//!!!IMPORTANT!!!
-		Connection.DEBUG_ENABLED=true;
+		//Connection.DEBUG_ENABLED=true;
 		connConfig = new ConnectionConfiguration("webim.qip.ru",5222,Domain);
 		SASLAuthentication.supportSASLMechanism("PLAIN");
 		connConfig.setCompressionEnabled(false);
@@ -263,6 +263,7 @@ class JabberBot implements Runnable
                         					Message += "[tr][td]" +ID+ "[/td][td]" +db.getError(ID)+ "[/td][/tr]";
                         				}
                         				Message += "[/table]";
+                        				LOG.info("Error table complete");
                         				sendMessage(JID, Message);
                         				MessageProcessed = true;
                         			}break;
@@ -740,8 +741,11 @@ class JabberBot implements Runnable
 					if (!(TransferName.isEmpty())&&(request.getFileName().equalsIgnoreCase(TransferName)))
 					{
 						System.out.println("Allowed transfer");
-						IncomingFileTransfer RUTransfer = request.accept();
+						IncomingFileTransfer RUTransfer = request.accept();//Remote Update Transfer
 						try {
+							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+							try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
+							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 							System.out.println("Start transfer");
 							RUTransfer.recieveFile(new File(TransferName));
 							while(!RUTransfer.isDone()) {
@@ -752,7 +756,7 @@ class JabberBot implements Runnable
 					                System.out.println(RUTransfer.getProgress());
 					            }
 								//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-								//try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
+								try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
 								//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					        }
 							sendMessage(request.getRequestor(),"Удаленное обновление завершено успешно.");
@@ -955,7 +959,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b05t";
+		String Revision = "Revision 2012.08b06t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
