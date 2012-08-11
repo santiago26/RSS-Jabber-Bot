@@ -732,8 +732,8 @@ class JabberBot implements Runnable
                 public void presenceChanged(Presence presence){/*System.out.println("Presence changed: " + presence.getFrom() + " " + presence);*/}
             });
             
-            final FileTransferManager RUManager = new FileTransferManager(connection);//Remote Update Manager
-            RUManager.addFileTransferListener(new FileTransferListener() {
+            final FileTransferManager UpdateManager = new FileTransferManager(connection);
+            UpdateManager.addFileTransferListener(new FileTransferListener() {
 				public void fileTransferRequest(FileTransferRequest request) {
 					System.out.println("Got transfer");
 					//if (request.getRequestor().substring(0, request.getRequestor().indexOf('/')).equalsIgnoreCase("commaster@qip.ru"))
@@ -741,19 +741,19 @@ class JabberBot implements Runnable
 					if (!(TransferName.isEmpty())&&(request.getFileName().equalsIgnoreCase(TransferName)))
 					{
 						System.out.println("Allowed transfer");
-						IncomingFileTransfer RUTransfer = request.accept();//Remote Update Transfer
+						IncomingFileTransfer UpdateTransfer = request.accept();
 						try {
 							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 							try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
 							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 							System.out.println("Start transfer");
-							RUTransfer.recieveFile(new File(TransferName));
-							while(!RUTransfer.isDone()) {
-								if(RUTransfer.getStatus().equals(Status.error)) {
-									System.out.println("ERROR!!! " + RUTransfer.getError());
+							UpdateTransfer.recieveFile(new File(TransferName));
+							while(!UpdateTransfer.isDone()) {
+								if(UpdateTransfer.getStatus().equals(Status.error)) {
+									System.out.println("ERROR!!! " + UpdateTransfer.getError());
 					            } else {
-					                System.out.println(RUTransfer.getStatus());
-					                System.out.println(RUTransfer.getProgress());
+					                System.out.println(UpdateTransfer.getStatus());
+					                System.out.println(UpdateTransfer.getProgress());
 					            }
 								//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 								try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
