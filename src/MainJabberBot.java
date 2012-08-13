@@ -429,7 +429,17 @@ class JabberBot implements Runnable
                         				OutgoingFileTransfer logTransfer = logTManager.createOutgoingFileTransfer(JID+"/"+Resource);
                         				try {
 											logTransfer.sendFile(new File("log.cpp"), "Latest log file");
-											while (!logTransfer.isDone()) {}
+											while (!logTransfer.isDone()) {
+												if(logTransfer.getStatus().equals(Status.error)) {
+									                  System.out.println("ERROR!!! " + logTransfer.getError());
+									            } else {
+									                  System.out.println(logTransfer.getStatus());
+									                  System.out.println(logTransfer.getProgress());
+									            }
+												//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+												try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
+												//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+											}
 										}catch (XMPPException e){sendMessage(JID,"Передача не удалась");}
                         				sendMessage(JID,"Передача завершена");
                         				MessageProcessed = true;
@@ -736,7 +746,6 @@ class JabberBot implements Runnable
             UpdateManager.addFileTransferListener(new FileTransferListener() {
 				public void fileTransferRequest(FileTransferRequest request) {
 					System.out.println("Got transfer");
-					//if (request.getRequestor().substring(0, request.getRequestor().indexOf('/')).equalsIgnoreCase("commaster@qip.ru"))
 					System.out.println(request.getFileName()+":"+TransferName);
 					if (!(TransferName.isEmpty())&&(request.getFileName().equalsIgnoreCase(TransferName)))
 					{
@@ -959,7 +968,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b06t";
+		String Revision = "Revision 2012.08b07t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
