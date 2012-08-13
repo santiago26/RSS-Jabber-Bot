@@ -30,7 +30,7 @@ class JabberBot implements Runnable
     private XMPPConnection connection;
     private boolean status = true;
     private boolean Stop_refresh = false;
-    private boolean Ignore_errors = false;
+    private boolean Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login;
     String Password = account.Password;
