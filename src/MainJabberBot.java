@@ -430,14 +430,14 @@ class JabberBot implements Runnable
                         				try {
 											logTransfer.sendFile(new File("log.cpp"), "Latest log file");
 											while (!logTransfer.isDone()) {
-												if(logTransfer.getStatus().equals(Status.error)) {
+												/*if(logTransfer.getStatus().equals(Status.error)) {
 									                  System.out.println("ERROR!!! " + logTransfer.getError());
 									            } else {
 									                  System.out.println(logTransfer.getStatus());
 									                  System.out.println(logTransfer.getProgress());
-									            }
+									            }*/
 												//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-												try{Thread.sleep(1000);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
+												try{Thread.sleep(1);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
 												//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 											}
 										}catch (XMPPException e){sendMessage(JID,"Передача не удалась");}
