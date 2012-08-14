@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 //import java.util.Random;
@@ -29,6 +30,7 @@ class JabberBot implements Runnable
 	private ConnectionConfiguration connConfig;
     private XMPPConnection connection;
     private boolean status = true;
+    private Calendar StartUp;
     private long curRSS_id = 0;
     private boolean Stop_refresh = false;
     private boolean Ignore_errors = true;
@@ -113,6 +115,7 @@ class JabberBot implements Runnable
             "csay name@domain - отправит твое сообщение данному jid-у до-словно.\n" +
             "rehead - обновит все ленты, не рассылая сообщений.\n" +
             "crss - узнает, на какой ленте так долго думаем.\n" +
+            "startup - скажет, когда запустили ботика.\n" +
             "getlog - перешлет тебе последний метр лога.\n" +
             "ru filename.ext - подготовится к загрузке обновления для filename.ext.\n" +
             "noerrors - включит/выключит мистический режим отсутствия ошибок.\n" +
@@ -125,6 +128,9 @@ class JabberBot implements Runnable
 	public void run()
 	{
 		LOG.info("Run JabberBot thread...");
+		StartUp = Calendar.getInstance();
+		StartUp.setTimeInMillis(System.currentTimeMillis());
+		System.currentTimeMillis();
 		SmackConfiguration.setLocalSocks5ProxyPort(13666);//!!!IMPORTANT!!!
 		//Connection.DEBUG_ENABLED=true;
 		connConfig = new ConnectionConfiguration("webim.qip.ru",5222,Domain);
@@ -269,6 +275,10 @@ class JabberBot implements Runnable
                         				Message += "[/table]";
                         				LOG.info("Error table complete");
                         				sendMessage(JID, Message);
+                        				MessageProcessed = true;
+                        			}break;
+                        			case "startup":{
+                        				sendMessage(JID, "Запуск произошел "+StartUp.get(Calendar.DAY_OF_MONTH)+"."+(StartUp.get(Calendar.MONTH)+1)+" в "+StartUp.get(Calendar.HOUR_OF_DAY)+":"+StartUp.get(Calendar.MINUTE)+":"+StartUp.get(Calendar.SECOND)+".");
                         				MessageProcessed = true;
                         			}break;
                         			case "close":{
