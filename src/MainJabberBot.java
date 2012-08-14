@@ -29,6 +29,7 @@ class JabberBot implements Runnable
 	private ConnectionConfiguration connConfig;
     private XMPPConnection connection;
     private boolean status = true;
+    private long curRSS_id = 0;
     private boolean Stop_refresh = false;
     private boolean Ignore_errors = true;
     private String TransferName = "";
@@ -111,7 +112,10 @@ class JabberBot implements Runnable
             "say name@domain - отправит твое сообщение данному jid-у.\n" +
             "csay name@domain - отправит твое сообщение данному jid-у до-словно.\n" +
             "rehead - обновит все ленты, не рассылая сообщений.\n" +
+            "crss - узнает, на какой ленте так долго думаем.\n" +
             "getlog - перешлет тебе последний метр лога.\n" +
+            "ru filename.ext - подготовится к загрузке обновления для filename.ext.\n" +
+            "noerrors - включит/выключит мистический режим отсутствия ошибок.\n" +
             "SQLQuery Query - ТОЛЬКО для SELECT запросов.\n" +
             "SQLUpdate Query - для запросов UPDATE и DELETE.\n" +
             "\n" +
@@ -283,6 +287,10 @@ class JabberBot implements Runnable
                         			}break;
                         			case "empty":{
                         				db.deleteEmpty();
+                        				MessageProcessed = true;
+                        			}break;
+                        			case "crss":{
+                        				sendMessage(JID,""+curRSS_id+"");
                         				MessageProcessed = true;
                         			}break;
                         			case "rev":case "revision":{
@@ -810,6 +818,8 @@ class JabberBot implements Runnable
         				{
         					//Получаем одну RSS ленту
         					
+        					curRSS_id = RSS_id;
+        					
         					//Проверяем и получаем новые записи для этой ленты
         					List<String> data = db.getNew(RSS_id,Ignore_errors);
         					
@@ -876,6 +886,7 @@ class JabberBot implements Runnable
         					//LOG.info("RSSFeed"+id+" sent...");
         			
         				}//end for
+        				curRSS_id = 0;
         				LOG.info("Update finished.");
         				
         		    }catch(Exception e){LOG.error("ERROR_XMPP:",e);}
@@ -968,7 +979,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b07t";
+		String Revision = "Revision 2012.08b08t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
