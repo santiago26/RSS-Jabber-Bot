@@ -102,6 +102,8 @@ class JabberBot implements Runnable
             "empty - пустит меня в плаванье по подпискам и лентам для нахождения лент без подписоки их уничтожения.\n" +
             "rev/revision - почешет твое ЧСВ и покажет номер моей сборки.\n" +
             "pingdb - потыкает БД палочкой.\n" +
+            "listrss - выдаст список всех лент.\n" +
+            "listsubs - выдаст список всех подписок.\n" +
             "listerrors - даст список всех забаненых лент.\n" +
             "listerrorsbb - даст подробный список всех забаненых лент.\n" +
             "geterror 123 - расскажет, что же за беда слечилась с лентой 123.\n" +
@@ -264,6 +266,18 @@ class JabberBot implements Runnable
                         				MessageProcessed = true;
                         			}break;
                         			case "listsubs":{
+                        				String Message = "";
+                        				List<String> Lfoo;
+                        				String[] SubSplit;
+                        				Lfoo=db.listSubs();
+                        				Message += "[table][tr][th width=30]ID[/th][th width=30]RSS[/th][th]JID[/th][/tr]";
+                        				for (String Sub : Lfoo) {
+                        					SubSplit=Sub.split(":");
+                        					Message += "[tr][td][center]" +SubSplit[0]+ "[/center][/td][td][center]" +SubSplit[1]+ "[/center][/td][td]" +SubSplit[2]+ "[/td][/tr]";
+                        				}
+                        				Message += "[/table]";
+                        				LOG.info("Subs table complete");
+                        				sendMessage(JID, Message);
                         				MessageProcessed = true;
                         			}break;
                         			case "listerrors":{
@@ -868,7 +882,7 @@ class JabberBot implements Runnable
         					{
         						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
         						//LOG.info("----------------[ NEW titles... ]----------------");
-        						for (String jid : db.getUsersRSS(RSS_id,1,0))
+        						for (String jid : db.listRSSUsers(RSS_id,1,0))
         						{
         							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
         							sendMessage(jid,messages);
@@ -876,7 +890,7 @@ class JabberBot implements Runnable
         			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
         			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         						}
-        						for (String jid : db.getUsersRSS(RSS_id,1,1))
+        						for (String jid : db.listRSSUsers(RSS_id,1,1))
         						{
         							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
         							sendMUCBroadcast(jid,messages);
@@ -891,7 +905,7 @@ class JabberBot implements Runnable
         					{
         						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
         						//LOG.info("----------------[ NEW titles... ]----------------");
-        						for (String jid : db.getUsersRSS(RSS_id,0,0))
+        						for (String jid : db.listRSSUsers(RSS_id,0,0))
         						{
         							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
         							sendMessage(jid,messages_bboff);
@@ -899,7 +913,7 @@ class JabberBot implements Runnable
         			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
         			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         						}
-        						for (String jid : db.getUsersRSS(RSS_id,0,1))
+        						for (String jid : db.listRSSUsers(RSS_id,0,1))
         						{
         							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
         							sendMUCBroadcast(jid,messages_bboff);
@@ -1005,7 +1019,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b09t";
+		String Revision = "Revision 2012.08b10t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()

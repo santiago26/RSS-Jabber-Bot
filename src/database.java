@@ -78,8 +78,24 @@ class database
 		return rss_list;
 	}
 		
+	//Получаем все связки подписок
+	public List<String> listSubs() {
+		System.out.println("Select all Subs.");
+		List<String> subs_list = new ArrayList<String>();
+		try {
+			synchronized (Mutex) {
+				ResultSet rs = st.executeQuery("SELECT Sub_id, RSS_id, Jabber FROM SUBS INNER JOIN USERS ON USERS.User_id=SUBS.User_id WHERE Is_conf=1;");
+				while(rs.next()){subs_list.add(""+rs.getLong("Sub_id")+":"+rs.getString("Jabber")+":"+rs.getLong("RSS_id"));}
+				rs.close();
+				Mutex.notify();
+			}
+		}catch(Exception e){LOG.error("ERROR_SQL:",e);}
+		System.out.println("Subslist built");
+		return subs_list;
+	}
+	
 	//Получаем все MJID подписанных конференций
-	public List<String> listConf() {
+ 	public List<String> listConf() {
 		System.out.println("Select all Conferences.");
 		List<String> conf_list = new ArrayList<String>();
 		try {
@@ -1296,7 +1312,7 @@ class database
 	}
 	
 	//Получаем список пользователей подписаных на указаную ленту без паузы и с указанным режимом ББ кодов 
-	public List<String> getUsersRSS(long RSS_id, int BB, int conf)
+	public List<String> listRSSUsers(long RSS_id, int BB, int conf)
 	{
 		List<String> rss_users = new ArrayList<String>();
 		try 
