@@ -270,12 +270,9 @@ class JabberBot implements Runnable
                         				List<String> Lfoo;
                         				String SubSplit[];
                         				Lfoo=db.listSubs();
-                        				LOG.debug(Lfoo.size());
                         				Message += "[table][tr][th width=30]ID[/th][th width=30]RSS[/th][th]JID[/th][/tr]";
                         				for (String Sub : Lfoo) {
                         					SubSplit=Sub.split(":");
-                        					LOG.debug(SubSplit.length);
-                        					LOG.debug(SubSplit);
                         					Message += "[tr][td][center]" +SubSplit[0]+ "[/center][/td][td][center]" +SubSplit[1]+ "[/center][/td][td]" +SubSplit[2]+ "[/td][/tr]";
                         				}
                         				Message += "[/table]";
