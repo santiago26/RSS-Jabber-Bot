@@ -84,8 +84,8 @@ class database
 		List<String> subs_list = new ArrayList<String>();
 		try {
 			synchronized (Mutex) {
-				ResultSet rs = st.executeQuery("SELECT Sub_id, RSS_id, Jabber FROM SUBS INNER JOIN USERS ON USERS.User_id=SUBS.User_id WHERE Is_conf=1;");
-				while(rs.next()){subs_list.add(""+rs.getLong("Sub_id")+":"+rs.getString("Jabber")+":"+rs.getLong("RSS_id"));}
+				ResultSet rs = st.executeQuery("SELECT Sub_id, RSS_id, Jabber FROM SUBS INNER JOIN USERS ON USERS.User_id=SUBS.User_id;");
+				while(rs.next()){subs_list.add(""+rs.getLong("Sub_id")+":"+rs.getLong("RSS_id")+":"+rs.getString("Jabber"));}
 				rs.close();
 				Mutex.notify();
 			}
