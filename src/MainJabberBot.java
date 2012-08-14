@@ -250,12 +250,28 @@ class JabberBot implements Runnable
                         				sendMessage(JID, Message);
                         				MessageProcessed = true;
                         			}break;
+                        			case "listrss":{
+                        				String Message = "";
+                        				List<Long> Lfoo;
+                        				Lfoo=db.listRSSFeeds();
+                        				Message += "[table][tr][th width=30]ID[/th][th]Ссылка[/th][/tr]";
+                        				for (Long ID : Lfoo) {
+                        					Message += "[tr][td]" +ID+ "[/td][td]" +db.getLink(ID)+ "[/td][/tr]";
+                        				}
+                        				Message += "[/table]";
+                        				LOG.info("RSS table complete");
+                        				sendMessage(JID, Message);
+                        				MessageProcessed = true;
+                        			}break;
+                        			case "listsubs":{
+                        				MessageProcessed = true;
+                        			}break;
                         			case "listerrors":{
                         				String Message = "";
-                        				List<Integer> Lfoo;
+                        				List<Long> Lfoo;
                         				Lfoo=db.listErrors();
                         				Message += "Ошибки("+Lfoo.size()+"): ";
-                        				for (Integer ID : Lfoo) {
+                        				for (Long ID : Lfoo) {
                         					if (!ID.equals(Lfoo.get(0))) Message += ", ";
                         					Message += ID;
                         				}
@@ -265,10 +281,10 @@ class JabberBot implements Runnable
                         			}break;
                         			case "listerrorsbb":{
                         				String Message = "";
-                        				List<Integer> Lfoo;
+                        				List<Long> Lfoo;
                         				Lfoo=db.listErrors();
                         				Message += "[table][tr][th width=30]ID[/th][th]Ошибка[/th][/tr]";
-                        				for (Integer ID : Lfoo) {
+                        				for (Long ID : Lfoo) {
                         					//LOG.info("Reading ID="+ID);
                         					Message += "[tr][td]" +ID+ "[/td][td]" +db.getError(ID)+ "[/td][/tr]";
                         				}
@@ -321,9 +337,9 @@ class JabberBot implements Runnable
                         			case "pardon":{
                         				String param = messageBody.substring(messageBody.indexOf(" ")+1);
                         				if (param.equals("all")) {
-                        					List<Integer> Lfoo;
+                        					List<Long> Lfoo;
                         					Lfoo=db.listErrors();
-                        					for (Integer ID : Lfoo) {
+                        					for (Long ID : Lfoo) {
                         						db.pardonRSS(ID);
                         					}
                         					sendMessage(JID,"All feeds unlocked.");
@@ -378,7 +394,7 @@ class JabberBot implements Runnable
                         			case "rehead":{
                         				sendMessage(JID,"Reheading initialized!");
                         				Stop_refresh=true;
-                        				for (Long RSS_id : db.getRSSFeeds())
+                        				for (Long RSS_id : db.listRSSFeeds())
                         				{
                         					//Получаем одну RSS ленту
 
@@ -824,7 +840,7 @@ class JabberBot implements Runnable
         				//Получаем все RSS каналы из базы данных
         				//database db = new database();
         				LOG.info("Getting RSSFeeds...");
-        				for (Long RSS_id : db.getRSSFeeds())
+        				for (Long RSS_id : db.listRSSFeeds())
         				{
         					//Получаем одну RSS ленту
         					
@@ -989,7 +1005,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b08t";
+		String Revision = "Revision 2012.08b09t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()

@@ -61,7 +61,7 @@ class database
 	//New CA: INSERT INTO CONF (User_id, User) VALUES(<User>,<Nickname>);
 	
 	//Получаем все RSS_id каналов из базы данных
-	public List<Long> getRSSFeeds()
+	public List<Long> listRSSFeeds()
 	{
 		System.out.println("Select all RSS feeds.");
 		List<Long> rss_list = new ArrayList<Long>();
@@ -77,7 +77,7 @@ class database
 		System.out.println("RSSlist built");
 		return rss_list;
 	}
-	
+		
 	//Получаем все MJID подписанных конференций
 	public List<String> listConf() {
 		System.out.println("Select all Conferences.");
@@ -111,13 +111,13 @@ class database
 	}
 	
 	//Получаем все MJID подписанных конференций
-	public List<Integer> listErrors() {
+	public List<Long> listErrors() {
 		System.out.println("Select all Errors.");
-		List<Integer> error_list = new ArrayList<Integer>();
+		List<Long> error_list = new ArrayList<Long>();
 		try {
 			synchronized (Mutex) {
 				ResultSet rs = st.executeQuery("SELECT RSS_id FROM RSS WHERE Needs_syntax_recheck=1;");
-				while(rs.next()){error_list.add(rs.getInt("RSS_id"));}
+				while(rs.next()){error_list.add(rs.getLong("RSS_id"));}
 				rs.close();
 				Mutex.notify();
 			}
@@ -1652,7 +1652,7 @@ class database
 		LOG.info("---------------------------------------------");
 		LOG.info("Remove empty subscriptions START");
 		ResultSet rs;
-		for (long RSS_id : getRSSFeeds())//Получить id всех каналов из таблицы RSS_feeds
+		for (long RSS_id : listRSSFeeds())//Получить id всех каналов из таблицы RSS_feeds
 		{
 			try
 			{
