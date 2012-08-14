@@ -256,7 +256,7 @@ class JabberBot implements Runnable
                         				Lfoo=db.listRSSFeeds();
                         				Message += "[table][tr][th width=30]ID[/th][th]Ссылка[/th][/tr]";
                         				for (Long ID : Lfoo) {
-                        					Message += "[tr][td]" +ID+ "[/td][td]" +db.getLink(ID)+ "[/td][/tr]";
+                        					Message += "[tr][td][center]" +ID+ "[/center][/td][td]" +db.getLink(ID)+ "[/td][/tr]";
                         				}
                         				Message += "[/table]";
                         				LOG.info("RSS table complete");
@@ -286,7 +286,7 @@ class JabberBot implements Runnable
                         				Message += "[table][tr][th width=30]ID[/th][th]Ошибка[/th][/tr]";
                         				for (Long ID : Lfoo) {
                         					//LOG.info("Reading ID="+ID);
-                        					Message += "[tr][td]" +ID+ "[/td][td]" +db.getError(ID)+ "[/td][/tr]";
+                        					Message += "[tr][td][center]" +ID+ "[/center][/td][td]" +db.getError(ID)+ "[/td][/tr]";
                         				}
                         				Message += "[/table]";
                         				LOG.info("Error table complete");
