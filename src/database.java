@@ -34,8 +34,9 @@ class database
 	String str = "Test connect to SQLite\n\n";
 	String dbConn = account.dbConn;
 	private static Object Mutex;
+	private long MAX_STANZAS = 65520;
 	
-	public database() 
+ 	public database() 
 	{
 		try
 		{
@@ -1254,23 +1255,52 @@ class database
 		msg="";
 		msg_bboff="";
 		
-		mesbbCol=mesbbCol.subList(0, Math.min(4, mesbbCol.size()));
-		mesCol=mesCol.subList(0, Math.min(4, mesCol.size()));
-
 		Collections.reverse(mesbbCol);
 		Collections.reverse(mesCol);
 		
+		if (message.size()>0) {
+			LOG.debug("List not empty");
+			LOG.debug(message.toString());
+		}
+		
+		message.clear();
+		
+		//BB
 		for (String post : mesbbCol)
 		{
+			if (msg.length()+post.length()>=MAX_STANZAS) {
+				message.add(msg);
+				msg="";
+			}
 			msg+=post;
 		}
+		if (!msg.isEmpty()) {
+			message.add(msg);
+			msg="";
+		}
+		mesbbCol=message;
+		message.clear();
+		
+		//noBB
 		for (String post : mesCol)
 		{
+			if (msg_bboff.length()+post.length()>=MAX_STANZAS) {
+				message.add(msg_bboff);
+				msg_bboff="";
+			}
 			msg_bboff+=post;
 		}
+		if (!msg_bboff.isEmpty()) {
+			message.add(msg_bboff);
+			msg_bboff="";
+		}
+		mesCol=message;
+		message.clear();
 
-		message.add(msg);
-		message.add(msg_bboff);
+		//flushing
+		message.add(mesbbCol.size()+" "+mesCol.size());
+		message.addAll(mesbbCol);
+		message.addAll(mesCol);
 		//System.out.println(">>Message built<<");
 		return message;
 	}

@@ -866,55 +866,63 @@ class JabberBot implements Runnable
         					}
         					
         					//Отделяем сообщения с ббкодами и без них
-        					String messages = data.get(0);
-        					String messages_bboff = data.get(1);
+        					int messagespos = 1;
+        					String messages = "", messages_bboff = "";
+        					int bbcount = Integer.parseInt(data.get(0).split(" ")[0]);
+        					int bboffcount = Integer.parseInt(data.get(0).split(" ")[1]);
+        					LOG.debug(bbcount+" "+bboffcount+"="+data.get(0));
         					
         					//--------------------------------------------------------------------------------------------------------------------        					
         					//Отправка сообщений с BB кодами
-        					if(messages.length()!=0)
-        					{
-        						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
-        						//LOG.info("----------------[ NEW titles... ]----------------");
-        						for (String jid : db.listRSSUsers(RSS_id,1,0))
-        						{
-        							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
-        							sendMessage(jid,messages);
-        							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-        			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        						}
-        						for (String jid : db.listRSSUsers(RSS_id,1,1))
-        						{
-        							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
-        							sendMUCBroadcast(jid,messages);
-        							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-        			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        						}
-        					}else{/*LOG.info("----------------[ No new titles... ]----------------");*/}
+        					for (messagespos=1, messages=data.get(messagespos); messagespos<bbcount+1; messagespos++, messages=data.get(messagespos)) {
+        						if(messages.length()!=0)
+            					{
+            						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
+            						//LOG.info("----------------[ NEW titles... ]----------------");
+            						for (String jid : db.listRSSUsers(RSS_id,1,0))
+            						{
+            							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
+            							sendMessage(jid,messages);
+            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            							try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            						}
+            						for (String jid : db.listRSSUsers(RSS_id,1,1))
+            						{
+            							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
+            							sendMUCBroadcast(jid,messages);
+            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            							try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            						}
+            					}else{/*LOG.info("----------------[ No new titles... ]----------------");*/}
+        					}
         					//--------------------------------------------------------------------------------------------------------------------
+        					
         					//Отправка сообщений без BB кодов
-        					if(messages_bboff.length()!=0)
-        					{
-        						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
-        						//LOG.info("----------------[ NEW titles... ]----------------");
-        						for (String jid : db.listRSSUsers(RSS_id,0,0))
-        						{
-        							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
-        							sendMessage(jid,messages_bboff);
-        							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-        			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        						}
-        						for (String jid : db.listRSSUsers(RSS_id,0,1))
-        						{
-        							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
-        							sendMUCBroadcast(jid,messages_bboff);
-        							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-        			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        						}
-        					}else{/*LOG.info("----------------[ No new titles... ]----------------");*/}
+        					for (messagespos=bbcount+1, messages_bboff=data.get(messagespos); messagespos<data.size(); messagespos++, messages_bboff=data.get(messagespos)) {
+        						if(messages_bboff.length()!=0)
+            					{
+            						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
+            						//LOG.info("----------------[ NEW titles... ]----------------");
+            						for (String jid : db.listRSSUsers(RSS_id,0,0))
+            						{
+            							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
+            							sendMessage(jid,messages_bboff);
+            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+            			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            						}
+            						for (String jid : db.listRSSUsers(RSS_id,0,1))
+            						{
+            							if(!connection.isConnected()) {LOG.error("Connection dropped!");}
+            							sendMUCBroadcast(jid,messages_bboff);
+            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+            			            	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            						}
+            					}else{/*LOG.info("----------------[ No new titles... ]----------------");*/}
+        					}
         					//--------------------------------------------------------------------------------------------------------------------
         					//LOG.info("RSSFeed"+id+" sent...");
         			
@@ -1012,7 +1020,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b10t";
+		String Revision = "Revision 2012.08b11t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
