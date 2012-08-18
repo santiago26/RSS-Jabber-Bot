@@ -391,14 +391,7 @@ class JabberBot implements Runnable
                         				sendMessage(JID,db.listUserRSS(LJID, 1));
                         				MessageProcessed=true;
                         			}break;
-                        			case "slast":{
-                        				String LJID = messageBody.substring(messageBody.indexOf(" ")+1);
-                        				String strid = LJID.substring(LJID.indexOf(" ")+1);
-                        				LJID = LJID.substring(0,LJID.indexOf(" "));
-                        				sendMessage(JID,db.getLast(LJID,strid));
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "sl":{
+                        			case "sl":case "slast":{
                         				String LJID = messageBody.substring(messageBody.indexOf(" ")+1);
                         				String strid = LJID.substring(LJID.indexOf(" ")+1);
                         				LJID = LJID.substring(0,LJID.indexOf(" "));
