@@ -874,7 +874,8 @@ class JabberBot implements Runnable
         					
         					//--------------------------------------------------------------------------------------------------------------------        					
         					//Отправка сообщений с BB кодами
-        					for (messagespos=1, messages=data.get(messagespos); messagespos<bbcount+1; messagespos++, messages=data.get(messagespos)) {
+        					for (messagespos=1; messagespos<bbcount+1; messagespos++) {
+        						messages=data.get(messagespos);
         						if(messages.length()!=0)
             					{
             						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
@@ -900,7 +901,8 @@ class JabberBot implements Runnable
         					//--------------------------------------------------------------------------------------------------------------------
         					
         					//Отправка сообщений без BB кодов
-        					for (messagespos=bbcount+1, messages_bboff=data.get(messagespos); messagespos<data.size(); messagespos++, messages_bboff=data.get(messagespos)) {
+        					for (messagespos=bbcount+1; messagespos<data.size(); messagespos++) {
+        						messages_bboff=data.get(messagespos);
         						if(messages_bboff.length()!=0)
             					{
             						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
