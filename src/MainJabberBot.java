@@ -878,7 +878,7 @@ class JabberBot implements Runnable
         						messages=data.get(messagespos);
         						if(messages.length()!=0)
             					{
-            						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
+            						//Узнаем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
             						//LOG.info("----------------[ NEW titles... ]----------------");
             						for (String jid : db.listRSSUsers(RSS_id,1,0))
             						{
@@ -905,7 +905,7 @@ class JabberBot implements Runnable
         						messages_bboff=data.get(messagespos);
         						if(messages_bboff.length()!=0)
             					{
-            						//Узнаеем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
+            						//Узнаем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
             						//LOG.info("----------------[ NEW titles... ]----------------");
             						for (String jid : db.listRSSUsers(RSS_id,0,0))
             						{
