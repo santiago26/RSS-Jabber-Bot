@@ -564,6 +564,7 @@ class JabberBot implements Runnable
                         					String idea = messageBody.substring(5).trim();
                         					String FromJID = JID;
                         					sendMessage("commaster@qip.ru",FromJID+" предложил такую идею: "+idea);
+                        					sendMessage("santiago26@qip.ru",FromJID+" предложил такую идею: "+idea);
                         					sendMessage(FromJID,"Спасибо за твои чудесные идеи, о великий юзер!");
                         					MessageProcessed = true;
                         				}break;
