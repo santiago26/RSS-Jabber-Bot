@@ -312,7 +312,7 @@ class JabberBot implements Runnable
                         				sendMessage(JID, "Запуск произошел "+StartUp.get(Calendar.DAY_OF_MONTH)+"."+(StartUp.get(Calendar.MONTH)+1)+" в "+StartUp.get(Calendar.HOUR_OF_DAY)+":"+StartUp.get(Calendar.MINUTE)+":"+StartUp.get(Calendar.SECOND)+".");
                         				MessageProcessed = true;
                         			}break;
-                        			case "close":{
+                        			case "close":case "сгинь":{
                         				connection.disconnect();
                         				MessageProcessed = true;
                         				status = false;
@@ -564,7 +564,6 @@ class JabberBot implements Runnable
                         					String idea = messageBody.substring(5).trim();
                         					String FromJID = JID;
                         					sendMessage("commaster@qip.ru",FromJID+" предложил такую идею: "+idea);
-                        					sendMessage("santiago26@qip.ru",FromJID+" предложил такую идею: "+idea);
                         					sendMessage(FromJID,"Спасибо за твои чудесные идеи, о великий юзер!");
                         					MessageProcessed = true;
                         				}break;
@@ -669,8 +668,12 @@ class JabberBot implements Runnable
                         				case "pause off":sendMUCMessage(MUC,MUser,db.setPause(MUC,0));MessageProcessed = true;break;//Общая пауза выключить
                         				case "bb on":sendMUCMessage(MUC,MUser,db.BBcode(MUC,1));MessageProcessed = true;break;//Включить ВВ коды
                         				case "bb off":sendMUCMessage(MUC,MUser,db.BBcode(MUC,0));MessageProcessed = true;break;//Отключить ВВ коды
-                        				case "help":case "?":case "h":sendMUCMessage(MUC,MUser,help);MessageProcessed = true;break;//Вывод справки
-                        				case "leave":{
+                        				case "help":case "?":case "h":{
+                        					sendMUCMessage(MUC,MUser,"Смотри приватик");
+                        					sendMUCPrivate(MUC,MUser,help);
+                        					MessageProcessed = true;
+                        				}break;//Вывод справки                        			
+                        				case "leave":case "сгинь":{
                         					sendMUCBroadcast(MUC,"И не звоните мне больше!");
                         					leaveMUC(MUC);
                         					db.remUser(MUC);
@@ -1015,6 +1018,26 @@ class JabberBot implements Runnable
             }catch(XMPPException e){LOG.error("ERROR_MUCMes:",e);}
 	    }
 	}
+	public void sendMUCPrivate(String MUC, String to, String message) {
+		if(!message.equals(""))
+	    {
+			LOG.info("Private message to "+MUC+"/"+to);
+			MultiUserChat mucThis = new MultiUserChat(connection,MUC);
+			if (!mucThis.isJoined())
+			{
+				DiscussionHistory history = new DiscussionHistory();
+				history.setMaxChars(0);
+				try {
+					mucThis.join(mucName, "", history, SmackConfiguration.getPacketReplyTimeout());
+				}catch(XMPPException e){LOG.error("ERROR_MUC:",e);}
+			}
+            try {
+            	MessageListener msgListener = null;
+            	Chat chat = mucThis.createPrivateChat(MUC+"/"+to,msgListener);	
+            	chat.sendMessage(message);
+            }catch(XMPPException e){LOG.error("ERROR_MUCMes:",e);}
+	    }
+	}
 	public void sendMUCBroadcast(String MUC, String message) {
 		if(!message.equals(""))
 	    {
@@ -1043,7 +1066,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b12t";
+		String Revision = "Revision 2012.08b13t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
