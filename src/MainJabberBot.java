@@ -345,16 +345,18 @@ class JabberBot implements Runnable
                         				MessageProcessed = true;
                         			}break;
                         			case "set":{
-                        				String param = messageBody.substring(messageBody.indexOf(" ")+1);
-                        				String Sysline = param.substring(0,messageBody.indexOf(" "));
-                        				param = param.substring(messageBody.indexOf(" ")+1);
+                        				String param = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
+                        				String Sysline = param.substring(0,param.indexOf(" "));
+                        				param = param.substring(param.indexOf(" ")+1);
                         				switch (Sysline)
                         				{
                         					case "help":{
                         						help=param;
+                        						sendMessage(JID,"help updated!");
                         					}break;
                         					case "shelp":{
                         						sHelp=param;
+                        						sendMessage(JID,"sHelp updated!");
                         					}break;
                         				}
                         				MessageProcessed = true;
