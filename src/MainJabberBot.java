@@ -870,7 +870,9 @@ class JabberBot implements Runnable
         					String messages = "", messages_bboff = "";
         					int bbcount = Integer.parseInt(data.get(0).split(" ")[0]);
         					int bboffcount = Integer.parseInt(data.get(0).split(" ")[1]);
-        					LOG.debug(bbcount+" "+bboffcount+"="+data.get(0));
+        					if (bbcount+bboffcount+1!=data.size()) {
+        						LOG.fatal("Data sizes do not match!");
+        					}
         					
         					//--------------------------------------------------------------------------------------------------------------------        					
         					//Отправка сообщений с BB кодами
@@ -901,7 +903,7 @@ class JabberBot implements Runnable
         					//--------------------------------------------------------------------------------------------------------------------
         					
         					//Отправка сообщений без BB кодов
-        					for (messagespos=bbcount+1; messagespos<data.size(); messagespos++) {
+        					for (messagespos=bbcount+1; messagespos<bbcount+bboffcount+1; messagespos++) {
         						messages_bboff=data.get(messagespos);
         						if(messages_bboff.length()!=0)
             					{
