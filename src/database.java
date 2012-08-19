@@ -1278,7 +1278,8 @@ class database
 			message.add(msg);
 			msg="";
 		}
-		mesbbCol=message;
+		mesbbCol.clear();
+		mesbbCol.addAll(message);
 		message.clear();
 		
 		//noBB
@@ -1294,7 +1295,8 @@ class database
 			message.add(msg_bboff);
 			msg_bboff="";
 		}
-		mesCol=message;
+		mesCol.clear();
+		mesCol.addAll(message);
 		message.clear();
 
 		//flushing
