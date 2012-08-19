@@ -39,6 +39,7 @@ class JabberBot implements Runnable
     String Password = account.Password;
     String Domain = account.Domain;
     String mucName = account.mucName;
+    String Revision = "Revision 2012.08b13t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -335,7 +336,7 @@ class JabberBot implements Runnable
                         				MessageProcessed = true;
                         			}break;
                         			case "rev":case "revision":{
-                        				getRevision(JID);
+                        				sendMessage(JID,Revision);
                         				MessageProcessed = true;
                         			}break;
                         			case "pingdb":{
@@ -1063,11 +1064,6 @@ class JabberBot implements Runnable
         String str = "Количество: "+entries.size() + "\n";
         for(RosterEntry r:entries){str += r.getUser()+"\t";}
         sendMessage(JID, str);
-	}
-	public void getRevision(String JID)
-	{
-		String Revision = "Revision 2012.08b13t";
-		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
 	{
