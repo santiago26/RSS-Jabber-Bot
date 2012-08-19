@@ -106,6 +106,7 @@ class JabberBot implements Runnable
             "listsubs - выдаст список всех подписок.\n" +
             "listerrors - даст список всех забаненых лент.\n" +
             "listerrorsbb - даст подробный список всех забаненых лент.\n" +
+            "set <existing string variable> <new text> - подменит текст служебного сообщения (пока-что только help и sHelp)\n" +
             "geterror 123 - расскажет, что же за беда слечилась с лентой 123.\n" +
             "pardon 123 - даст ленте 123 еще один шанс.\n" +
             "getlink 123 - покажет истинный источник ленты 123.\n" +
@@ -341,6 +342,21 @@ class JabberBot implements Runnable
                         				sendMessage(JID,"Queueing DB ping action...");
                         				db.ping();
                         				sendMessage(JID,"DB says pong!");
+                        				MessageProcessed = true;
+                        			}break;
+                        			case "set":{
+                        				String param = messageBody.substring(messageBody.indexOf(" ")+1);
+                        				String Sysline = param.substring(0,messageBody.indexOf(" "));
+                        				param = param.substring(messageBody.indexOf(" ")+1);
+                        				switch (Sysline)
+                        				{
+                        					case "help":{
+                        						help=param;
+                        					}break;
+                        					case "shelp":{
+                        						sHelp=param;
+                        					}break;
+                        				}
                         				MessageProcessed = true;
                         			}break;
                         			case "geterror":{
@@ -1024,7 +1040,7 @@ class JabberBot implements Runnable
 	}
 	public void getRevision(String JID)
 	{
-		String Revision = "Revision 2012.08b11t";
+		String Revision = "Revision 2012.08b12t";
 		sendMessage(JID,Revision);
 	}
 	public void restartApplication()
