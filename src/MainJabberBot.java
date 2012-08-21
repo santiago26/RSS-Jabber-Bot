@@ -1,28 +1,69 @@
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 //import java.util.Random;
 import java.lang.Math;
 import java.io.*;
 
 import org.jivesoftware.smack.*;
-//import org.jivesoftware.smack.filter.AndFilter;
-//import org.jivesoftware.smack.filter.PacketExtensionFilter;
-import org.jivesoftware.smack.filter.PacketFilter;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
-//import org.jivesoftware.smack.packet.Message.Body;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.filter.*;
+import org.jivesoftware.smack.packet.*;
 
+import org.jivesoftware.smackx.*;
 import org.jivesoftware.smackx.filetransfer.*;
 import org.jivesoftware.smackx.filetransfer.FileTransfer.*;
 import org.jivesoftware.smackx.muc.*;
+import org.jivesoftware.smackx.packet.*;
 
 import org.apache.log4j.Logger;
 
 import rss2bb.sec.*;
+
+class CiteExtension implements PacketExtension {
+    @SuppressWarnings("rawtypes")
+	private List bodies = new ArrayList();
+    
+    public String getElementName() {
+        return "c";
+    }
+
+    public String getNamespace() {
+        return "http://jabber.org/protocol/caps";
+    }
+
+    @SuppressWarnings("rawtypes")
+	public String toXML() {
+        StringBuilder buf = new StringBuilder();
+        //buf.append("<").append(getElementName()).append(" xmlns=\"").append(getNamespace()).append("\">");
+        // Loop through all the bodies and append them to the string buffer
+        for (Iterator i = getBodies(); i.hasNext();) {
+            buf.append((String) i.next());
+        }
+        //buf.append("</").append(getElementName()).append(">");
+        return buf.toString();
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public Iterator getBodies() {
+        synchronized (bodies) {
+            return Collections.unmodifiableList(new ArrayList(bodies)).iterator();
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void addBody(String body) {
+        synchronized (bodies) {
+            bodies.add(body);
+        }
+    }
+    
+    public int getBodiesCount() {
+        return bodies.size();
+    }
+}
 
 class JabberBot implements Runnable
 {
@@ -39,7 +80,7 @@ class JabberBot implements Runnable
     String Password = account.Password;
     String Domain = account.Domain;
     String mucName = account.mucName;
-    String Revision = "Revision 2012.08b13t";
+    String Revision = "2012 08b14t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -162,23 +203,56 @@ class JabberBot implements Runnable
             	}
         	}
         	LOG.info("Connected on "+connectionattempt+" try.");
+        	//Setting discovery
+        	ServiceDiscoveryManager SDMJabberBot = ServiceDiscoveryManager.getInstanceFor(connection);
+        	Iterator<String> SDMF = SDMJabberBot.getFeatures();
+        	while (SDMF.hasNext()) {System.out.println(SDMF.next());}
         	//LOG.info("Logging in...");
             connection.login(Login,Password,"rssbot");
             //LOG.info("Logged in...");
             Presence presence = new Presence(Presence.Type.available);
-            presence.setStatus("RSS Jabber Bot: активен");
+            presence.setLanguage("ru");
             presence.setPriority(50);
+            //PacketExtension
+            CiteExtension Ecaps = new CiteExtension();
+            Ecaps.addBody("<c xmlns=\"http://jabber.org/protocol/caps\" node=\"http://qip.ru/caps\" ver=\""+Revision+"\" ext=\"voice-v1\" />");
+            presence.addExtension(Ecaps);
             connection.sendPacket(presence);
+            presence.setStatus("RSS Jabber Bot: активен");
             //LOG.info("Presence sent...");
             
-            PacketFilter pfMain = new PacketTypeFilter(Message.class);
+            //Setting features
+            PacketFilter pfFeatures = new PacketTypeFilter(IQ.class);
+            PacketListener plFeatures = new PacketListener() {
+				public void processPacket(Packet packet) {
+					System.out.println("Got IQ");
+					if (packet instanceof Version) {
+               		 	if (((IQ) packet).getType() != IQ.Type.GET) return;
+               		    System.out.println("Got Version IQ");
+               		 	Version version = (Version) packet;
+               		 	String JID = version.getFrom();
+               		 	String ME = version.getTo();
+               		 	version.setType(IQ.Type.RESULT);
+               		 	version.setFrom(ME);
+               		 	version.setTo(JID);
+               		 	version.setName("Commaster System");
+               		 	version.setVersion(Revision);
+               		 	version.setOs("QIP OS 1.3");
+               		 	connection.sendPacket(version);
+					}
+				}
+            };
+            connection.addPacketListener(plFeatures, pfFeatures);
+            
+            //Setting listeners
+			PacketFilter pfMain = new PacketTypeFilter(Message.class);
             final PacketListener plMain = new PacketListener() {
                 public void processPacket(Packet packet) 
                 {
                 	System.out.println("Got Packet");
-                	if(packet instanceof Message)
+                	if (packet instanceof Message)
                     {
-                        Message message    = (Message) packet;
+                        Message message = (Message) packet;
                         switch (message.getType()) {
                         	case chat:{
                         		System.out.println("Got Message");
@@ -1008,6 +1082,7 @@ class JabberBot implements Runnable
 			MultiUserChat mucThis = new MultiUserChat(connection,MUC);
 			if (!mucThis.isJoined())
 			{
+				LOG.debug("Rejoining...");
 				DiscussionHistory history = new DiscussionHistory();
 				history.setMaxChars(0);
 				try {
@@ -1026,6 +1101,7 @@ class JabberBot implements Runnable
 			MultiUserChat mucThis = new MultiUserChat(connection,MUC);
 			if (!mucThis.isJoined())
 			{
+				LOG.debug("Rejoining...");
 				DiscussionHistory history = new DiscussionHistory();
 				history.setMaxChars(0);
 				try {
@@ -1033,8 +1109,8 @@ class JabberBot implements Runnable
 				}catch(XMPPException e){LOG.error("ERROR_MUC:",e);}
 			}
             try {
-            	MessageListener msgListener = null;
-            	Chat chat = mucThis.createPrivateChat(MUC+"/"+to,msgListener);	
+            	//MessageListener msgListener = null;
+            	Chat chat = mucThis.createPrivateChat(MUC+"/"+to,/*msgListener*/null);	
             	chat.sendMessage(message);
             }catch(XMPPException e){LOG.error("ERROR_MUCMes:",e);}
 	    }
@@ -1046,6 +1122,7 @@ class JabberBot implements Runnable
 			MultiUserChat mucThis = new MultiUserChat(connection,MUC);
 			if (!mucThis.isJoined())
 			{
+				LOG.debug("Rejoining...");
 				DiscussionHistory history = new DiscussionHistory();
 				history.setMaxChars(0);
 				try {
