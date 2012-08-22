@@ -80,7 +80,7 @@ class JabberBot implements Runnable
     String Password = account.Password;
     String Domain = account.Domain;
     String mucName = account.mucName;
-    String Revision = "2012 08b14t";
+    String Revision = "2012 08b15t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -1073,7 +1073,7 @@ class JabberBot implements Runnable
             history.setMaxChars(0);
 			mucThis.join("bye-bye", "", history, SmackConfiguration.getPacketReplyTimeout());
 			mucThis.leave();
-		}catch(XMPPException e){LOG.error("ERROR_MUCleave:",e);}
+		}catch(XMPPException e){LOG.error("ERROR_MUCleave("+MUC+"):",e);}
 	}
 	public void sendMUCMessage(String MUC, String to, String message) {
 		if(!message.equals(""))
@@ -1087,11 +1087,11 @@ class JabberBot implements Runnable
 				history.setMaxChars(0);
 				try {
 					mucThis.join(mucName, "", history, SmackConfiguration.getPacketReplyTimeout());
-				}catch(XMPPException e){LOG.error("ERROR_MUC:",e);}
+				}catch(XMPPException e){LOG.error("ERROR_MUC("+MUC+"):",e);}
 			}
             try {
             	mucThis.sendMessage(to+": "+message);
-            }catch(XMPPException e){LOG.error("ERROR_MUCMes:",e);}
+            }catch(XMPPException e){LOG.error("ERROR_MUCMes("+MUC+"):",e);}
 	    }
 	}
 	public void sendMUCPrivate(String MUC, String to, String message) {
@@ -1106,13 +1106,13 @@ class JabberBot implements Runnable
 				history.setMaxChars(0);
 				try {
 					mucThis.join(mucName, "", history, SmackConfiguration.getPacketReplyTimeout());
-				}catch(XMPPException e){LOG.error("ERROR_MUC:",e);}
+				}catch(XMPPException e){LOG.error("ERROR_MUC("+MUC+"):",e);}
 			}
             try {
             	//MessageListener msgListener = null;
             	Chat chat = mucThis.createPrivateChat(MUC+"/"+to,/*msgListener*/null);	
             	chat.sendMessage(message);
-            }catch(XMPPException e){LOG.error("ERROR_MUCMes:",e);}
+            }catch(XMPPException e){LOG.error("ERROR_MUCMes("+MUC+"):",e);}
 	    }
 	}
 	public void sendMUCBroadcast(String MUC, String message) {
@@ -1127,11 +1127,11 @@ class JabberBot implements Runnable
 				history.setMaxChars(0);
 				try {
 					mucThis.join(mucName, "", history, SmackConfiguration.getPacketReplyTimeout());
-				}catch(XMPPException e){LOG.error("ERROR_MUC:",e);}
+				}catch(XMPPException e){LOG.error("ERROR_MUC("+MUC+"):",e);}
 			}
             try {
             	mucThis.sendMessage(message);
-            }catch(XMPPException e){LOG.error("ERROR_MUCMes:",e);}
+            }catch(XMPPException e){LOG.error("ERROR_MUCMes("+MUC+"):",e);}
 	    }
 	}
 	public void getRoster(String JID)
