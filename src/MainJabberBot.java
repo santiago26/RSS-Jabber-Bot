@@ -917,7 +917,7 @@ class JabberBot implements Runnable
         				//database db = new database();
         				LOG.info("Getting RSSFeeds...");
         				List<Long> LFeeds = db.listRSSFeeds();
-        				maxRSS_id = LFeeds.get(LFeeds.size()-1);
+        				maxRSS_id = LFeeds.get(Math.max(LFeeds.size()-1,0));
         				for (Long RSS_id : LFeeds)
         				{
         					//Получаем одну RSS ленту
