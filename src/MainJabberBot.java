@@ -233,7 +233,7 @@ class JabberBot implements Runnable
                		 	version.setTo(JID);
                		 	version.setName("Commaster System");
                		 	version.setVersion(Revision);
-               		 	version.setOs("QIP OS 1.3");
+               		 	version.setOs("QIP OS 1.3.1");
                		 	connection.sendPacket(version);
 					}
 				}
@@ -243,11 +243,9 @@ class JabberBot implements Runnable
             //Setting listeners
 			PacketFilter pfMain = new PacketTypeFilter(Message.class);
             final PacketListener plMain = new PacketListener() {
-                public void processPacket(Packet packet) 
-                {
+                public void processPacket(Packet packet) {
                 	System.out.println("Got Packet");
-                	if (packet instanceof Message)
-                    {
+                	if (packet instanceof Message) {
                         Message message = (Message) packet;
                         switch (message.getType()) {
                         	case chat:{
@@ -259,13 +257,12 @@ class JabberBot implements Runnable
                         		}
                         		String JID         = message.getFrom();
                         		//conference block module
-                        		if (JID.contains("conference"))
-                        		{
+                        		if (JID.contains("conference")) {
                         			System.out.println("Conference blocked");
                         			return;
                         		}
                         		boolean MessageProcessed = false;
-                        		if (messageBody.length()==0){
+                        		if (messageBody.length()==0) {
                         			System.out.println("Empty message");
                         			return;
                         		}
@@ -284,428 +281,408 @@ class JabberBot implements Runnable
                         		messageBody = (command.toLowerCase().trim()+messageBody);
 
                         		String Command;
-                        		if (messageBody.indexOf(" ")==-1)
-                        		{
+                        		if (messageBody.indexOf(" ")==-1) {
                         			Command = messageBody;
                         		}
-                        		else
-                        		{
+                        		else {
                         			Command = messageBody.substring(0, messageBody.indexOf(" "));
                         		}
 
-                        		//command only for admin
-                        		if ((JID.equals("commaster@qip.ru"))||(JID.equals("santiago26@qip.ru")))
-                        		{
-                        			LOG.info("Is admin");
-                        			switch (Command)
-                        			{
-                        			case "roster":{
-                        				getRoster(JID);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "users":{
-                        				String Message = "";
-                        				List<String> Lfoo;
-                        				Lfoo=db.listUsers();
-                        				Message += "Пользователи("+Lfoo.size()+"):";
-                        				for (String LJID : Lfoo) {
-                        					Message += "\t";
-                        					Message += LJID;
-                        					Message += db.countUserRSS(LJID);
-                        				}
-                        				Lfoo=db.listConf();
-                        				Message += ".\nКонференции("+Lfoo.size()+"):";
-                        				for (String MJID : Lfoo) {
-                        					Message += "\t";
-                        					Message += MJID;
-                        					Message += db.countUserRSS(MJID);
-                        				}
-                        				Message += ".";
-                        				sendMessage(JID, Message);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "listrss":{
-                        				String Message = "";
-                        				List<Long> Lfoo;
-                        				Lfoo=db.listRSSFeeds();
-                        				Message += "[table][tr][th width=30]ID[/th][th]Ссылка[/th][/tr]";
-                        				for (Long ID : Lfoo) {
-                        					Message += "[tr][td][center]" +ID+ "[/center][/td][td]" +db.getLink(ID)+ "[/td][/tr]";
-                        				}
-                        				Message += "[/table]";
-                        				LOG.info("RSS table complete");
-                        				sendMessage(JID, Message);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "listsubs":{
-                        				String Message = "";
-                        				List<String> Lfoo;
-                        				String SubSplit[];
-                        				Lfoo=db.listSubs();
-                        				Message += "[table][tr][th width=30]ID[/th][th width=30]RSS[/th][th]JID[/th][/tr]";
-                        				for (String Sub : Lfoo) {
-                        					SubSplit=Sub.split(":");
-                        					Message += "[tr][td][center]" +SubSplit[0]+ "[/center][/td][td][center]" +SubSplit[1]+ "[/center][/td][td]" +SubSplit[2]+ "[/td][/tr]";
-                        				}
-                        				Message += "[/table]";
-                        				LOG.info("Subs table complete");
-                        				sendMessage(JID, Message);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "listerrors":{
-                        				String Message = "";
-                        				List<Long> Lfoo;
-                        				Lfoo=db.listErrors();
-                        				Message += "Ошибки("+Lfoo.size()+"): ";
-                        				for (Long ID : Lfoo) {
-                        					if (!ID.equals(Lfoo.get(0))) Message += ", ";
-                        					Message += ID;
-                        				}
-                        				Message += ".";
-                        				sendMessage(JID, Message);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "listerrorsbb":{
-                        				String Message = "";
-                        				List<Long> Lfoo;
-                        				Lfoo=db.listErrors();
-                        				Message += "[table][tr][th width=30]ID[/th][th]Ошибка[/th][/tr]";
-                        				for (Long ID : Lfoo) {
-                        					//LOG.info("Reading ID="+ID);
-                        					Message += "[tr][td][center]" +ID+ "[/center][/td][td]" +db.getError(ID)+ "[/td][/tr]";
-                        				}
-                        				Message += "[/table]";
-                        				LOG.info("Error table complete");
-                        				sendMessage(JID, Message);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "startup":{
-                        				sendMessage(JID, "Запуск произошел "+StartUp.get(Calendar.DAY_OF_MONTH)+"."+(StartUp.get(Calendar.MONTH)+1)+" в "+StartUp.get(Calendar.HOUR_OF_DAY)+":"+StartUp.get(Calendar.MINUTE)+":"+StartUp.get(Calendar.SECOND)+".");
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "close":case "сгинь":{
-                        				connection.disconnect();
-                        				MessageProcessed = true;
-                        				status = false;
-                        				LOG.info("Выход из программы!");
-                        				System.exit(0);
-                        			}break;
-                        			case "restart":{
-                        				connection.disconnect();
-                        				MessageProcessed = true;
-                        				status = false;
-                        				LOG.info("Перезапуск программы!");
-                        				restartApplication();
-                        			}break;
-                        			case "empty":{
-                        				db.deleteEmpty();
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "crss":{
-                        				sendMessage(JID,""+curRSS_id+"/"+maxRSS_id+"");
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "rev":case "revision":{
-                        				sendMessage(JID,Revision);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "pingdb":{
-                        				sendMessage(JID,"Queueing DB ping action...");
-                        				db.ping();
-                        				sendMessage(JID,"DB says pong!");
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "set":{
-                        				String param = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
-                        				String Sysline = param.substring(0,param.indexOf(" "));
-                        				param = param.substring(param.indexOf(" ")+1);
-                        				switch (Sysline)
-                        				{
-                        					case "help":{
-                        						help=param;
-                        						sendMessage(JID,"help updated!");
-                        					}break;
-                        					case "shelp":{
-                        						sHelp=param;
-                        						sendMessage(JID,"sHelp updated!");
-                        					}break;
-                        				}
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "geterror":{
-                        				long RSS_id = Long.parseLong(messageBody.substring(messageBody.indexOf(" ")+1));
-                        				sendMessage(JID,db.getError(RSS_id));
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "pardon":{
-                        				String param = messageBody.substring(messageBody.indexOf(" ")+1);
-                        				if (param.equals("all")) {
-                        					List<Long> Lfoo;
-                        					Lfoo=db.listErrors();
-                        					for (Long ID : Lfoo) {
-                        						db.pardonRSS(ID);
-                        					}
-                        					sendMessage(JID,"All feeds unlocked.");
-                        				}
-                        				else {
-                        					long RSS_id = Long.parseLong(param);
-                        					db.pardonRSS(RSS_id);
-                        					sendMessage(JID,"RSS "+RSS_id+" unlocked.");
-                        				}
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "noerrors":{
-                        				Ignore_errors=!Ignore_errors;
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "getlink":{
-                        				long RSS_id = Long.parseLong(messageBody.substring(messageBody.indexOf(" ")+1));
-                        				sendMessage(JID,db.getLink(RSS_id));
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "adduser":{
-                        				String AJID = messageBody.substring(messageBody.indexOf(" ")+1);
-                        				db.addUser(AJID,0);
-                        				sendMessage(JID,"User "+AJID+" added!");
-                        				MessageProcessed=true;
-                        			}break;
-                        			case "remuser":{
-                        				String DJID = messageBody.substring(messageBody.indexOf(" ")+1);
-                        				db.remUser(DJID);
-                        				sendMessage(JID,"User "+DJID+" removed!");
-                        				MessageProcessed=true;
-                        			}break;
-                        			case "slist":{
-                        				String LJID = messageBody.substring(messageBody.indexOf(" ")+1);
-                        				sendMessage(JID,db.listUserRSS(LJID, 1));
-                        				MessageProcessed=true;
-                        			}break;
-                        			case "sl":case "slast":{
-                        				String LJID = messageBody.substring(messageBody.indexOf(" ")+1);
-                        				String strid = LJID.substring(LJID.indexOf(" ")+1);
-                        				LJID = LJID.substring(0,LJID.indexOf(" "));
-                        				sendMessage(JID,db.getLast(LJID,strid));
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "rehead":{
-                        				sendMessage(JID,"Reheading initialized!");
-                        				Stop_refresh=true;
-                        				for (Long RSS_id : db.listRSSFeeds())
-                        				{
-                        					//Получаем одну RSS ленту
-
-                        					//Проверяем и получаем новые записи для этой ленты
-                        					List<String> data = db.getNew(RSS_id, true);
-
-                        					if (data==null)
-                        					{
-                        						if (!Ignore_errors) sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
-                        						//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        						try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-                        						//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        						continue;
-                        					}
-                        				}
-                        				Stop_refresh=false;
-                        				sendMessage(JID,"Reheading complete!");
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "say":{
-                        				String TJID = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
-                        				String Text = TJID.substring(TJID.indexOf(" ")+1);
-                        				TJID = TJID.substring(0,TJID.indexOf(" "));
-                        				sendMessage(TJID,"Из пространства внезапно донеслось: "+Text);
-                        				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        				try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-                        				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        				sendMessage(JID,"Отправлено...");
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "csay":{
-                        				String TJID = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
-                        				String Text = TJID.substring(TJID.indexOf(" ")+1);
-                        				TJID = TJID.substring(0,TJID.indexOf(" "));
-                        				sendMessage(TJID,Text);
-                        				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        				try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-                        				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        				sendMessage(JID,"Отправлено...");
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "sqlquery":{
-                        				String Query = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
-                        				List<String> rs = db.SQLQuery(Query);
-                        				String Message="";
-                        				for (String RSLine : rs) {
-                        					Message+=RSLine + "\n";
-                        				}
-                        				sendMessage(JID,Message);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "sqlupdate":{
-                        				String Query = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
-                        				boolean complete = db.SQLUpdate(Query);
-                        				if (complete) sendMessage(JID,"Success");
-                        				else sendMessage(JID,"Failure");
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "shelp":{
-                        				sendMessage(JID,sHelp);
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "getlog":{
-                        				//LOG.info("Starting file transfer");
-                        				FileTransferManager logTManager = new FileTransferManager(connection);
-                        				OutgoingFileTransfer logTransfer = logTManager.createOutgoingFileTransfer(JID+"/"+Resource);
-                        				try {
-											logTransfer.sendFile(new File("log.cpp"), "Latest log file");
-											while (!logTransfer.isDone()) {
-												/*if(logTransfer.getStatus().equals(Status.error)) {
-									                  System.out.println("ERROR!!! " + logTransfer.getError());
-									            } else {
-									                  System.out.println(logTransfer.getStatus());
-									                  System.out.println(logTransfer.getProgress());
-									            }*/
-												//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-												try{Thread.sleep(1);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
-												//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-											}
-										}catch (XMPPException e){sendMessage(JID,"Передача не удалась");}
-                        				sendMessage(JID,"Передача завершена");
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "ru":{
-                        				TransferName = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
-                        				sendMessage(JID,"Remote Update of "+TransferName+" armed!");
-                        				MessageProcessed = true;
-                        			}break;
+                        		switch (db.getUGroup(JID)) {
+                        			case "Admin": {
+                        				LOG.info("Is admin");
+                            			switch (Command) {
+                            				case "roster": {
+                            					getRoster(JID);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "users": {
+                            					String Message = "";
+                            					List<String> Lfoo;
+                            					Lfoo=db.listUsers();
+                            					Message += "Пользователи("+Lfoo.size()+"):";
+                            					for (String LJID : Lfoo) {
+                            						Message += "\t";
+                            						Message += LJID;
+                            						Message += db.countUserRSS(LJID);
+                            					}
+                            					Lfoo=db.listConf();
+                            					Message += ".\nКонференции("+Lfoo.size()+"):";
+                            					for (String MJID : Lfoo) {
+                            						Message += "\t";
+                            						Message += MJID;
+                            						Message += db.countUserRSS(MJID);
+                            					}
+                            					Message += ".";
+                            					sendMessage(JID, Message);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "listrss": {
+                            					String Message = "";
+                            					List<Long> Lfoo;
+                            					Lfoo=db.listRSSFeeds();
+                            					Message += "[table][tr][th width=30]ID[/th][th]Ссылка[/th][/tr]";
+                            					for (Long ID : Lfoo) {
+                            						Message += "[tr][td][center]" +ID+ "[/center][/td][td]" +db.getLink(ID)+ "[/td][/tr]";
+                            					}
+                            					Message += "[/table]";
+                            					LOG.info("RSS table complete");
+                            					sendMessage(JID, Message);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "listsubs": {
+                            					String Message = "";
+                            					List<String> Lfoo;
+                            					String SubSplit[];
+                            					Lfoo=db.listSubs();
+                            					Message += "[table][tr][th width=30]ID[/th][th width=30]RSS[/th][th]JID[/th][/tr]";
+                            					for (String Sub : Lfoo) {
+                            						SubSplit=Sub.split(":");
+                            						Message += "[tr][td][center]" +SubSplit[0]+ "[/center][/td][td][center]" +SubSplit[1]+ "[/center][/td][td]" +SubSplit[2]+ "[/td][/tr]";
+                            					}
+                            					Message += "[/table]";
+                            					LOG.info("Subs table complete");
+                            					sendMessage(JID, Message);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "listerrors": {
+                            					String Message = "";
+                            					List<Long> Lfoo;
+                            					Lfoo=db.listErrors();
+                            					Message += "Ошибки("+Lfoo.size()+"): ";
+                            					for (Long ID : Lfoo) {
+                            						if (!ID.equals(Lfoo.get(0))) Message += ", ";
+                            						Message += ID;
+                            					}
+                            					Message += ".";
+                            					sendMessage(JID, Message);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "listerrorsbb": {
+                            					String Message = "";
+                            					List<Long> Lfoo;
+                            					Lfoo=db.listErrors();
+                            					Message += "[table][tr][th width=30]ID[/th][th]Ошибка[/th][/tr]";
+                            					for (Long ID : Lfoo) {
+                            						//LOG.info("Reading ID="+ID);
+                            						Message += "[tr][td][center]" +ID+ "[/center][/td][td]" +db.getError(ID)+ "[/td][/tr]";
+                            					}
+                            					Message += "[/table]";
+                            					LOG.info("Error table complete");
+                            					sendMessage(JID, Message);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "startup": {
+                            					sendMessage(JID, "Запуск произошел "+StartUp.get(Calendar.DAY_OF_MONTH)+"."+(StartUp.get(Calendar.MONTH)+1)+" в "+StartUp.get(Calendar.HOUR_OF_DAY)+":"+StartUp.get(Calendar.MINUTE)+":"+StartUp.get(Calendar.SECOND)+".");
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "close":case "сгинь": {
+                            					connection.disconnect();
+                            					MessageProcessed = true;
+                            					status = false;
+                            					LOG.info("Выход из программы!");
+                            					System.exit(0);
+                            				}break;
+                            				case "restart": {
+                            					connection.disconnect();
+                            					MessageProcessed = true;
+                            					status = false;
+                            					LOG.info("Перезапуск программы!");
+                            					restartApplication();
+                            				}break;
+                            				case "empty": {
+                            					db.deleteEmpty();
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "crss": {
+                            					sendMessage(JID,""+curRSS_id+"/"+maxRSS_id+"");
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "rev":case "revision": {
+                            					sendMessage(JID,Revision);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "pingdb": {
+                            					sendMessage(JID,"Queueing DB ping action...");
+                            					db.ping();
+                            					sendMessage(JID,"DB says pong!");
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "set": {
+                            					String param = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
+                            					String Sysline = param.substring(0,param.indexOf(" "));
+                            					param = param.substring(param.indexOf(" ")+1);
+                            					switch (Sysline) {
+                            						case "help": {
+                            							help=param;
+                            							sendMessage(JID,"help updated!");
+                            						}break;
+                            						case "shelp": {
+                            							sHelp=param;
+                            							sendMessage(JID,"sHelp updated!");
+                            						}break;
+                            					}
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "geterror": {
+                            					long RSS_id = Long.parseLong(messageBody.substring(messageBody.indexOf(" ")+1));
+                            					sendMessage(JID,db.getError(RSS_id));
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "pardon": {
+                            					String param = messageBody.substring(messageBody.indexOf(" ")+1);
+                            					if (param.equals("all")) {
+                            						List<Long> Lfoo;
+                            						Lfoo=db.listErrors();
+                            						for (Long ID : Lfoo) {
+                            							db.pardonRSS(ID);
+                            						}
+                            						sendMessage(JID,"All feeds unlocked.");
+                            					}
+                            					else {
+                            						long RSS_id = Long.parseLong(param);
+                            						db.pardonRSS(RSS_id);
+                            						sendMessage(JID,"RSS "+RSS_id+" unlocked.");
+                            					}
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "noerrors": {
+                            					Ignore_errors=!Ignore_errors;
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "getlink": {
+                            					long RSS_id = Long.parseLong(messageBody.substring(messageBody.indexOf(" ")+1));
+                            					sendMessage(JID,db.getLink(RSS_id));
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "adduser": {
+                            					String AJID = messageBody.substring(messageBody.indexOf(" ")+1);
+                            					db.addUser(AJID,0);
+                            					sendMessage(JID,"User "+AJID+" added!");
+                            					MessageProcessed=true;
+                            				}break;
+                            				case "remuser": {
+                            					String DJID = messageBody.substring(messageBody.indexOf(" ")+1);
+                            					db.remUser(DJID);
+                            					sendMessage(JID,"User "+DJID+" removed!");
+                            					MessageProcessed=true;
+                            				}break;
+                            				case "slist": {
+                            					String LJID = messageBody.substring(messageBody.indexOf(" ")+1);
+                            					sendMessage(JID,db.listUserRSS(LJID, 1));
+                            					MessageProcessed=true;
+                            				}break;
+                            				case "sl":case "slast": {
+                            					String LJID = messageBody.substring(messageBody.indexOf(" ")+1);
+                            					String strid = LJID.substring(LJID.indexOf(" ")+1);
+                            					LJID = LJID.substring(0,LJID.indexOf(" "));
+                            					sendMessage(JID,db.getLast(LJID,strid));
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "rehead": {
+                            					sendMessage(JID,"Reheading initialized!");
+                            					Stop_refresh=true;
+                            					for (Long RSS_id : db.listRSSFeeds()) {
+                            						//Получаем одну RSS ленту
+                            						
+                            						//Проверяем и получаем новые записи для этой ленты
+                            						List<String> data = db.getNew(RSS_id, true);
+                            						
+                            						if (data==null) {
+                            							if (!Ignore_errors) sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
+                            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            							try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+                            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            							continue;
+                            						}
+                            					}
+                            					Stop_refresh=false;
+                            					sendMessage(JID,"Reheading complete!");
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "say": {
+                            					String TJID = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
+                            					String Text = TJID.substring(TJID.indexOf(" ")+1);
+                            					TJID = TJID.substring(0,TJID.indexOf(" "));
+                            					sendMessage(TJID,"Из пространства внезапно донеслось: "+Text);
+                            					//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            					try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+                            					//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            					sendMessage(JID,"Отправлено...");
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "csay": {
+                            					String TJID = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
+                            					String Text = TJID.substring(TJID.indexOf(" ")+1);
+                            					TJID = TJID.substring(0,TJID.indexOf(" "));
+                            					sendMessage(TJID,Text);
+                            					//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            					try{Thread.sleep(1000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+                            					//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            					sendMessage(JID,"Отправлено...");
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "sqlquery": {
+                            					String Query = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
+                            					List<String> rs = db.SQLQuery(Query);
+                            					String Message="";
+                            					for (String RSLine : rs) {
+                            						Message+=RSLine + "\n";
+                            					}
+                            					sendMessage(JID,Message);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "sqlupdate": {
+                            					String Query = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
+                            					boolean complete = db.SQLUpdate(Query);
+                            					if (complete) sendMessage(JID,"Success");
+                            					else sendMessage(JID,"Failure");
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "shelp": {
+                            					sendMessage(JID,sHelp);
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "getlog": {
+                            					//LOG.info("Starting file transfer");
+                            					FileTransferManager logTManager = new FileTransferManager(connection);
+                            					OutgoingFileTransfer logTransfer = logTManager.createOutgoingFileTransfer(JID+"/"+Resource);
+                            					try {
+                            						logTransfer.sendFile(new File("log.cpp"), "Latest log file");
+                            						while (!logTransfer.isDone()) {
+                            							/*if(logTransfer.getStatus().equals(Status.error)) {
+    									                	System.out.println("ERROR!!! " + logTransfer.getError());
+    									            	} else {
+    									                  	System.out.println(logTransfer.getStatus());
+    									                  	System.out.println(logTransfer.getProgress());
+    									            	}*/
+                            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            							try{Thread.sleep(1);}catch(Exception e1){LOG.error("ERROR_THREAD:",e1);}
+                            							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            						}
+                            					}catch (XMPPException e){sendMessage(JID,"Передача не удалась");}
+                            					sendMessage(JID,"Передача завершена");
+                            					MessageProcessed = true;
+                            				}break;
+                            				case "ru": {
+                            					TransferName = messageBodyO.substring(messageBodyO.indexOf(" ")+1);
+                            					sendMessage(JID,"Remote Update of "+TransferName+" armed!");
+                            					MessageProcessed = true;
+                            				}break;
+                            			}
                         			}
-                        		}
-                        		//common commands for all
-                        		switch(messageBody)
-                        		{
-                        		case "ping":sendMessage(JID,"pong");MessageProcessed = true;break;
-                        		case "list":sendMessage(JID,db.listUserRSS(JID,0));MessageProcessed = true;break;
-                        		case "listbb":sendMessage(JID,db.listUserRSS(JID,1));MessageProcessed = true;break;
-                        		case "pause on":sendMessage(JID,db.setPause(JID,1));MessageProcessed = true;break;//Общая пауза включить
-                        		case "pause off":sendMessage(JID,db.setPause(JID,0));MessageProcessed = true;break;//Общая пауза выключить
-                        		case "bb on":sendMessage(JID,db.BBcode(JID,1));MessageProcessed = true;break;//Включить ВВ коды
-                        		case "bb off":sendMessage(JID,db.BBcode(JID,0));MessageProcessed = true;break;//Отключить ВВ коды
-                        		case "help":case "?":case "h":sendMessage(JID,help);MessageProcessed = true;break;//Вывод справки
-                        		default:
-                        		{
-                        			if (messageBody.length()<3) break;
-                        			switch(messageBody.substring(0,2).toLowerCase())
-                        			{
-                        			case "s ":
-                        			{
-                        				String rss_url = messageBody.substring(2).trim();
-                        				int i = db.addSub(rss_url,JID);
-                        				if(i == 1){sendMessage(JID,"Вы подписаны (You are subscribed).");}
-                        				if(i == 2){sendMessage(JID,"Вы уже подписаны на данную ленту новостей (You are already subscribed to this feed).");}
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "d ":
-                        			{
-                        				String strid = messageBody.substring(2).trim();
-                        				int i = db.delSub(JID,strid);
-                        				if(i==1){sendMessage(JID,"Ошибка номера подписки, наберите команду [i]list[/i] (Error number of subscription, type in the command [i]list[/i]).");}
-                        				if(i==2){sendMessage(JID,"Ваша подписка удалена (Your subscription is removed).");}
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "p ":
-                        			{
-                        				String strid = messageBody.substring(2).trim();
-                        				sendMessage(JID,db.pauseSub(JID,strid));
-                        				MessageProcessed = true;
-                        			}break;
-                        			case "l ":
-                        			{
-                        				String strid = messageBody.substring(2).trim();
-                        				sendMessage(JID,db.getLast(JID,strid));
-                        				MessageProcessed = true;
-                        			}break;
-                        			default:
-                        			{
-                        				if (messageBody.length()<6) break;
-                        				switch(messageBody.substring(0,5).toLowerCase())
-                        				{
-                        				case "idea ":
-                        				{
-                        					String idea = messageBody.substring(5).trim();
-                        					String FromJID = JID;
-                        					sendMessage("commaster@qip.ru",FromJID+" предложил такую идею: "+idea);
-                        					sendMessage(FromJID,"Спасибо за твои чудесные идеи, о великий юзер!");
-                        					MessageProcessed = true;
-                        				}break;
-                        				case "last ":
-                        				{
-                        					String strid = messageBody.substring(5).trim();
-                        					sendMessage(JID,db.getLast(JID,strid));
-                        					MessageProcessed = true;
-                        				}break;
-                        				case "join ":
-                        				{
-                        					String MJID = messageBody.substring(5).trim();
-                        					LOG.info("+++++++++++++++++++++++++++++++++++++++++++++[SYSTEM START]");
-                        					LOG.info(MJID+" private invitation from "+JID);
-                        					LOG.info("+++++++++++++++++++++++++++++++++++++++++++++[SYSTEM END]");
-
-                        					MultiUserChat muc = new MultiUserChat(connection,MJID);
-                        					if (muc.isJoined()) return;
-                        					DiscussionHistory history = new DiscussionHistory();
-                        					history.setMaxChars(0);
-                        					try {
-                        						muc.join(mucName, "", history, SmackConfiguration.getPacketReplyTimeout());
-                        						if (!muc.isJoined()) return;
-                        						muc.sendMessage("Мда-да?/Wazzzup?");
-                        						//Issuer=muc.getOccupant(Issuer).getJid().replaceAll("(.*?)[/].*","$1").toLowerCase();
-                        						System.out.println("plMUC for " + MJID);
-                        						if (!db.isUser(MJID)) {
-                        							db.addUser(MJID, 1);
-                        						}
-                        						/*if (!db.isCA(MJID,JID)) {
-                        							db.addCA(MJID,JID);
-                        						}*/
-                        						sendMessage(JID,"Присоеденились!");
-                        					}catch(XMPPException e){LOG.error("ERROR_MUC("+MJID+"):",e);sendMessage(JID,"Не удалось присоедениться. Проверьте настройки комнаты и попробуйте еще раз.");}
-                        					MessageProcessed = true;
-                        				}break;
-                        				default:/*sendMessage(JID,"Unknown command");*/break;
-                        				}
+                        			case "User": {
+                        				switch(messageBody) {
+                                			case "ping":sendMessage(JID,"pong");MessageProcessed = true;break;
+                                			case "list":sendMessage(JID,db.listUserRSS(JID,0));MessageProcessed = true;break;
+                                			case "listbb":sendMessage(JID,db.listUserRSS(JID,1));MessageProcessed = true;break;
+                                			case "pause on":sendMessage(JID,db.setPause(JID,1));MessageProcessed = true;break;//Общая пауза включить
+                                			case "pause off":sendMessage(JID,db.setPause(JID,0));MessageProcessed = true;break;//Общая пауза выключить
+                                			case "bb on":sendMessage(JID,db.BBcode(JID,1));MessageProcessed = true;break;//Включить ВВ коды
+                                			case "bb off":sendMessage(JID,db.BBcode(JID,0));MessageProcessed = true;break;//Отключить ВВ коды
+                                			case "help":case "?":case "h":sendMessage(JID,help);MessageProcessed = true;break;//Вывод справки
+                                			default: {
+                                				if (messageBody.length()<3) break;
+                                				switch(messageBody.substring(0,2).toLowerCase()) {
+                                					case "s ": {
+                                							String rss_url = messageBody.substring(2).trim();
+                                							int i = db.addSub(rss_url,JID);
+                                							if(i == 1){sendMessage(JID,"Вы подписаны (You are subscribed).");}
+                                							if(i == 2){sendMessage(JID,"Вы уже подписаны на данную ленту новостей (You are already subscribed to this feed).");}
+                                							MessageProcessed = true;
+                                					}break;
+                                					case "d ": {
+                                						String strid = messageBody.substring(2).trim();
+                                						int i = db.delSub(JID,strid);
+                                						if(i==1){sendMessage(JID,"Ошибка номера подписки, наберите команду [i]list[/i] (Error number of subscription, type in the command [i]list[/i]).");}
+                                						if(i==2){sendMessage(JID,"Ваша подписка удалена (Your subscription is removed).");}
+                                						MessageProcessed = true;
+                                					}break;
+                                					case "p ": {
+                                						String strid = messageBody.substring(2).trim();
+                                						sendMessage(JID,db.pauseSub(JID,strid));
+                                						MessageProcessed = true;
+                                					}break;
+                                					case "l ": {
+                                						String strid = messageBody.substring(2).trim();
+                                						sendMessage(JID,db.getLast(JID,strid));
+                                						MessageProcessed = true;
+                                					}break;
+                                					default: {
+                                						if (messageBody.length()<6) break;
+                                						switch(messageBody.substring(0,5).toLowerCase()) {
+                                							case "idea ":case "идея ": {
+                                								String idea = messageBody.substring(5).trim();
+                                								String FromJID = JID;
+                                								sendMessage("commaster@qip.ru",FromJID+" предложил такую идею: "+idea);
+                                								sendMessage(FromJID,"Спасибо за твои чудесные идеи, о великий юзер!");
+                                								MessageProcessed = true;
+                                							}break;
+                                							case "last ": {
+                                								String strid = messageBody.substring(5).trim();
+                                								sendMessage(JID,db.getLast(JID,strid));
+                                								MessageProcessed = true;
+                                							}break;
+                                							case "join ": {
+                                								String MJID = messageBody.substring(5).trim();
+                                								LOG.info("+++++++++++++++++++++++++++++++++++++++++++++[SYSTEM START]");
+                                								LOG.info(MJID+" private invitation from "+JID);
+                                								LOG.info("+++++++++++++++++++++++++++++++++++++++++++++[SYSTEM END]");
+                                								
+                                								MultiUserChat muc = new MultiUserChat(connection,MJID);
+                                								if (muc.isJoined()) return;
+                                								DiscussionHistory history = new DiscussionHistory();
+                                								history.setMaxChars(0);
+                                								try {
+                                									muc.join(mucName, "", history, SmackConfiguration.getPacketReplyTimeout());
+                                									if (!muc.isJoined()) return;
+                                									muc.sendMessage("Мда-да?/Wazzzup?");
+                                									//Issuer=muc.getOccupant(Issuer).getJid().replaceAll("(.*?)[/].*","$1").toLowerCase();
+                                									System.out.println("plMUC for " + MJID);
+                                									if (!db.isUser(MJID)) {
+                                										db.addUser(MJID, 1);
+                                									}
+                                									/*if (!db.isCA(MJID,JID)) {
+                                										db.addCA(MJID,JID);
+                                									}*/
+                                									sendMessage(JID,"Присоеденились!");
+                                								}catch(XMPPException e){LOG.error("ERROR_MUC("+MJID+"):",e);sendMessage(JID,"Не удалось присоедениться. Проверьте настройки комнаты и попробуйте еще раз.");}
+                                								MessageProcessed = true;
+                                							}break;
+                                							default:/*sendMessage(JID,"Unknown command");*/break;
+                                						}
+                                					}
+                                				}
+                                			}break;
+                                		}
                         			}
-                        			}//end switch
+                        			default: {
+                        				if (!MessageProcessed) {
+                                			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                			try{Thread.sleep(3000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
+                                			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                			String reply="";
+                                			reply += messageBodyO.substring(0, Math.min(100, messageBodyO.length()));
+                                			if (messageBodyO.length()>100) {
+                                				reply += "...";
+                                			}
+                                			reply += ": нет такой команды\n";
+                                			reply += messageBodyO.substring(0, Math.min(100, messageBodyO.length()));
+                                			if (messageBodyO.length()>100) {
+                                				reply += "...";
+                                			}
+                                			reply += ": no such command\n";
 
-                        		}break;
-                        		}//end switch
-                        		if (!MessageProcessed)
-                        		{
-                        			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        			try{Thread.sleep(3000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
-                        			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        			String reply="";
-                        			reply += messageBodyO.substring(0, Math.min(100, messageBodyO.length()));
-                        			if (messageBodyO.length()>100)
-                        			{
-                        				reply += "...";
+                                			String FromJID = JID;
+                                			LOG.info("default to " + FromJID);
+                                			sendMessage(FromJID,reply);                        	
+                                		}
                         			}
-                        			reply += ": нет такой команды\n";
-                        			reply += messageBodyO.substring(0, Math.min(100, messageBodyO.length()));
-                        			if (messageBodyO.length()>100)
-                        			{
-                        				reply += "...";
-                        			}
-                        			reply += ": no such command\n";
-
-                        			String FromJID = JID;
-                        			LOG.info("default to " + FromJID);
-                        			sendMessage(FromJID,reply);                        	
                         		}
                         	}break;
-                        	case groupchat:{
+                        	case groupchat: {
                         		System.out.println("Got MUCMessage");
-                        		if (message.getBody().startsWith(mucName+": "))
-                        		{
+                        		if (message.getBody().startsWith(mucName+": ")) {
                         			System.out.println("My Message");
                         			String MUCJID = message.getFrom();
                         			System.out.println("From "+MUCJID);
@@ -739,12 +716,12 @@ class JabberBot implements Runnable
                         				case "pause off":sendMUCMessage(MUC,MUser,db.setPause(MUC,0));MessageProcessed = true;break;//Общая пауза выключить
                         				case "bb on":sendMUCMessage(MUC,MUser,db.BBcode(MUC,1));MessageProcessed = true;break;//Включить ВВ коды
                         				case "bb off":sendMUCMessage(MUC,MUser,db.BBcode(MUC,0));MessageProcessed = true;break;//Отключить ВВ коды
-                        				case "help":case "?":case "h":{
+                        				case "help":case "?":case "h": {
                         					sendMUCMessage(MUC,MUser,"Смотри приватик");
                         					sendMUCPrivate(MUC,MUser,help);
                         					MessageProcessed = true;
                         				}break;//Вывод справки                        			
-                        				case "leave":case "сгинь":{
+                        				case "leave":case "сгинь": {
                         					sendMUCBroadcast(MUC,"И не звоните мне больше!");
                         					leaveMUC(MUC);
                         					db.remUser(MUC);
@@ -753,42 +730,41 @@ class JabberBot implements Runnable
                         				default: {
                         					if (messageBody.length()<3) break;
                         					switch(messageBody.substring(0,2).toLowerCase()) {
-                        						case "s ":{
+                        						case "s ": {
                         							String rss_url = messageBody.substring(2).trim();
                         							int i = db.addSub(rss_url,MUC);
                         							if(i == 1){sendMUCMessage(MUC,MUser,"Вы подписаны (You are subscribed).");}
                         							if(i == 2){sendMUCMessage(MUC,MUser,"Вы уже подписаны на данную ленту новостей (You are already subscribed to this feed).");}
                         							MessageProcessed = true;
                         						}break;
-                        						case "d ":{
+                        						case "d ": {
                         							String strid = messageBody.substring(2).trim();
                         							int i = db.delSub(MUC,strid);
                         							if(i==1){sendMUCMessage(MUC,MUser,"Ошибка номера подписки, наберите команду [i]list[/i] (Error number of subscription, type in the command [i]list[/i]).");}
                         							if(i==2){sendMUCMessage(MUC,MUser,"Ваша подписка удалена (Your subscription is removed).");}
                         							MessageProcessed = true;
                         						}break;
-                        						case "p ":{
+                        						case "p ": {
                         							String strid = messageBody.substring(2).trim();
                         							sendMUCMessage(MUC,MUser,db.pauseSub(MUC,strid));
                         							MessageProcessed = true;
                         						}break;
-                        						case "l ":{
+                        						case "l ": {
                         							String strid = messageBody.substring(2).trim();
                         							sendMUCMessage(MUC,MUser,db.getLast(MUC,strid));
                         							MessageProcessed = true;
                         						}break;
-                        						default:{
+                        						default: {
                         							if (messageBody.length()<6) break;
                         							switch(messageBody.substring(0,5).toLowerCase()) {
-                        								case "idea ":{
+                        								case "idea ":case "идея ": {
                         									String idea = messageBody.substring(5).trim();
                         									String FromJID = MUC+"/"+MUser;
                         									sendMessage("commaster@qip.ru",FromJID+" предложил такую идею: "+idea);
                         									sendMUCMessage(MUC,MUser,"Спасибо за твои чудесные идеи, о великий юзер!");
                         									MessageProcessed = true;
                         								}break;
-                        								case "last ":
-                        								{
+                        								case "last ": {
                         									String strid = messageBody.substring(5).trim();
                         									sendMUCMessage(MUC,MUser,db.getLast(MUC,strid));
                         									MessageProcessed = true;
@@ -796,13 +772,13 @@ class JabberBot implements Runnable
                         								default:/*sendMessage(JID,"Unknown command");*/break;
                         							}
                         						}
-                        					}//end switch
+                        					}
                         				}break;
-                        			}//end switch
+                        			}
                         			return;
                         		}
                         	}break;
-                        	default:{
+                        	default: {
                         		return;
                         	}
                         }
