@@ -34,7 +34,7 @@ class database
 	String str = "Test connect to SQLite\n\n";
 	String dbConn = account.dbConn;
 	private static Object Mutex;
-	private long MAX_STANZAS = 65520;
+	private long MAX_STANZAS = 32500;
 	
  	public database() 
 	{

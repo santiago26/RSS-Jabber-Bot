@@ -957,7 +957,7 @@ class JabberBot implements Runnable
         					{
         						if (!Ignore_errors) {
         							if(!connection.isConnected()) {
-        								LOG.error("Connection dropped!");status = false;LOG.info("Перезапуск программы!");restartApplication();
+        								LOG.error("Connection dropped0!");//status = false;LOG.info("Перезапуск программы!");restartApplication();
         							}
         							sendMessage("commaster@qip.ru",RSS_id.toString()+" haz problems.");
         						}
@@ -986,7 +986,7 @@ class JabberBot implements Runnable
             						//LOG.info("----------------[ NEW titles... ]----------------");
             						for (String jid : db.listRSSUsers(RSS_id,1,0))
             						{
-            							if(!connection.isConnected()) {LOG.error("Connection dropped!");status = false;LOG.info("Перезапуск программы!");restartApplication();}
+            							if(!connection.isConnected()) {LOG.error("Connection dropped1!");/*status = false;LOG.info("Перезапуск программы!");restartApplication();*/}
             							sendMessage(jid,messages);
             							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             							try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
@@ -994,7 +994,7 @@ class JabberBot implements Runnable
             						}
             						for (String jid : db.listRSSUsers(RSS_id,1,1))
             						{
-            							if(!connection.isConnected()) {LOG.error("Connection dropped!");status = false;LOG.info("Перезапуск программы!");restartApplication();}
+            							if(!connection.isConnected()) {LOG.error("Connection dropped2!");/*status = false;LOG.info("Перезапуск программы!");restartApplication();*/}
             							sendMUCBroadcast(jid,messages);
             							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             							try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
@@ -1013,7 +1013,7 @@ class JabberBot implements Runnable
             						//LOG.info("----------------[ NEW titles... ]----------------");
             						for (String jid : db.listRSSUsers(RSS_id,0,0))
             						{
-            							if(!connection.isConnected()) {LOG.error("Connection dropped!");status = false;LOG.info("Перезапуск программы!");restartApplication();}
+            							if(!connection.isConnected()) {LOG.error("Connection dropped3!");/*status = false;LOG.info("Перезапуск программы!");restartApplication();*/}
             							sendMessage(jid,messages_bboff);
             							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
@@ -1021,7 +1021,7 @@ class JabberBot implements Runnable
             						}
             						for (String jid : db.listRSSUsers(RSS_id,0,1))
             						{
-            							if(!connection.isConnected()) {LOG.error("Connection dropped!");status = false;LOG.info("Перезапуск программы!");restartApplication();}
+            							if(!connection.isConnected()) {LOG.error("Connection dropped4!");/*status = false;LOG.info("Перезапуск программы!");restartApplication();*/}
             							sendMUCBroadcast(jid,messages_bboff);
             							//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             			            	try{Thread.sleep(5000);}catch(Exception e){LOG.error("ERROR_THREAD:",e);}
