@@ -1790,7 +1790,7 @@ class database
 					String message = rs.getString("UGroup");
 					rs.close();
 					Mutex.notify();
-					return "Group: "+message;
+					return message;
 				}
 				else
 				{
