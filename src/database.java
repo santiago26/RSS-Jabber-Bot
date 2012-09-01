@@ -1762,7 +1762,48 @@ class database
 		}catch(SQLException e){LOG.error("ERROR_SQL:",e);}
 	}
 	
-	//Удаление пользователя и его подписок jid
+	//Изменение группы пользователя
+	public boolean setUGroup(String JID, String UGroup)
+	{
+		try
+		{
+			synchronized (Mutex)
+			{
+				st.executeUpdate("UPDATE USERS SET UGroup='"+UGroup+"' WHERE Jabber='"+JID+"';");
+				Mutex.notify();
+			}
+		}catch(SQLException e){LOG.error("ERROR_SQL:",e); return false;}
+		return true;
+	}
+	
+	//Получение группы пользователя
+	public String getUGroup(String JID)
+	{
+		ResultSet rs;
+		try
+		{
+			synchronized (Mutex)
+			{
+				rs = st.executeQuery("SELECT UGroup FROM USERS WHERE Jabber='"+JID+"';");
+				if (rs.next())
+				{
+					String message = rs.getString("UGroup");
+					rs.close();
+					Mutex.notify();
+					return "Group: "+message;
+				}
+				else
+				{
+					rs.close();
+					Mutex.notify();
+					return "No such user!";
+				}
+			}
+		}catch(SQLException e){LOG.error("ERROR_SQL:",e);}
+		return "UNKNOWN";
+	}
+	
+	//Удаление пользователя и его подписок по jid
 	public void remUser(String JID)
 	{
 		LOG.info("---------------------------------------------");

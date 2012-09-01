@@ -73,14 +73,10 @@ class JabberBot implements Runnable
     private boolean status = true;
     private Calendar StartUp;
     private long curRSS_id = 0, maxRSS_id = 0;
-    private boolean Stop_refresh = false;
-    private boolean Ignore_errors = true;
+    private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
-    String Login = account.Login;
-    String Password = account.Password;
-    String Domain = account.Domain;
-    String mucName = account.mucName;
-    String Revision = "2012 09b01t";
+    String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
+    String Revision = "2012 09b02t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -668,9 +664,9 @@ class JabberBot implements Runnable
                         						if (!db.isUser(MJID)) {
                         							db.addUser(MJID, 1);
                         						}
-                        						if (!db.isCA(MJID,JID)) {
+                        						/*if (!db.isCA(MJID,JID)) {
                         							db.addCA(MJID,JID);
-                        						}
+                        						}*/
                         						sendMessage(JID,"Присоеденились!");
                         					}catch(XMPPException e){LOG.error("ERROR_MUC("+MJID+"):",e);sendMessage(JID,"Не удалось присоедениться. Проверьте настройки комнаты и попробуйте еще раз.");}
                         					MessageProcessed = true;
@@ -836,9 +832,9 @@ class JabberBot implements Runnable
 						if (!db.isUser(MJID)) {
 							db.addUser(MJID, 1);
 						}
-						if (!db.isCA(MJID,Issuer)) {
+						/*if (!db.isCA(MJID,Issuer)) {
 							db.addCA(MJID,Issuer);
-						}
+						}*/
 						sendMessage(Issuer,"Присоеденились!");
 					}catch(XMPPException e){LOG.error("ERROR_MUC("+MJID+"):",e);sendMessage(Issuer,"Не удалось присоедениться. Проверьте настройки комнаты и попробуйте еще раз.");}
 				}
