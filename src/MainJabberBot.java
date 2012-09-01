@@ -72,7 +72,7 @@ class JabberBot implements Runnable
     private XMPPConnection connection;
     private boolean status = true;
     private Calendar StartUp;
-    private long curRSS_id = 0;
+    private long curRSS_id = 0, maxRSS_id = 0;
     private boolean Stop_refresh = false;
     private boolean Ignore_errors = true;
     private String TransferName = "";
@@ -80,7 +80,7 @@ class JabberBot implements Runnable
     String Password = account.Password;
     String Domain = account.Domain;
     String mucName = account.mucName;
-    String Revision = "2012 08b16t";
+    String Revision = "2012 09b01t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -406,7 +406,7 @@ class JabberBot implements Runnable
                         				MessageProcessed = true;
                         			}break;
                         			case "crss":{
-                        				sendMessage(JID,""+curRSS_id+"");
+                        				sendMessage(JID,""+curRSS_id+"/"+maxRSS_id+"");
                         				MessageProcessed = true;
                         			}break;
                         			case "rev":case "revision":{
@@ -944,7 +944,9 @@ class JabberBot implements Runnable
         				//Получаем все RSS каналы из базы данных
         				//database db = new database();
         				LOG.info("Getting RSSFeeds...");
-        				for (Long RSS_id : db.listRSSFeeds())
+        				List<Long> LFeeds = db.listRSSFeeds();
+        				maxRSS_id = LFeeds.get(LFeeds.size()-1);
+        				for (Long RSS_id : LFeeds)
         				{
         					//Получаем одну RSS ленту
         					
@@ -1033,7 +1035,7 @@ class JabberBot implements Runnable
         					//LOG.info("RSSFeed"+id+" sent...");
         			
         				}//end for
-        				curRSS_id = 0;
+        				curRSS_id = maxRSS_id = 0;
         				LOG.info("Update finished.");
         				
         		    }catch(Exception e){LOG.error("ERROR_XMPP:",e);}
