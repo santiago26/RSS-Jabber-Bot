@@ -76,7 +76,7 @@ class JabberBot implements Runnable
     private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
-    String Revision = "2012 09b02t";
+    String Revision = "2012 09b03t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -1035,7 +1035,7 @@ class JabberBot implements Runnable
 	{
 		if(!message.equals(""))
 	    {
-			LOG.info("Message to "+to);
+			LOG.info("Message("+message.length()+") to "+to);
 			ChatManager chatmanager = connection.getChatManager();
 	        Chat newChat = chatmanager.createChat(to, null);
 	        try
@@ -1057,7 +1057,7 @@ class JabberBot implements Runnable
 	public void sendMUCMessage(String MUC, String to, String message) {
 		if(!message.equals(""))
 	    {
-			LOG.info("Message to "+MUC+"/"+to);
+			LOG.info("Message("+message.length()+") to "+MUC+"/"+to);
 			MultiUserChat mucThis = new MultiUserChat(connection,MUC);
 			if (!mucThis.isJoined())
 			{
@@ -1076,7 +1076,7 @@ class JabberBot implements Runnable
 	public void sendMUCPrivate(String MUC, String to, String message) {
 		if(!message.equals(""))
 	    {
-			LOG.info("Private message to "+MUC+"/"+to);
+			LOG.info("Private message("+message.length()+") to "+MUC+"/"+to);
 			MultiUserChat mucThis = new MultiUserChat(connection,MUC);
 			if (!mucThis.isJoined())
 			{
@@ -1097,7 +1097,7 @@ class JabberBot implements Runnable
 	public void sendMUCBroadcast(String MUC, String message) {
 		if(!message.equals(""))
 	    {
-			LOG.info("Message to "+MUC);
+			LOG.info("Message("+message.length()+") to "+MUC);
 			MultiUserChat mucThis = new MultiUserChat(connection,MUC);
 			if (!mucThis.isJoined())
 			{
