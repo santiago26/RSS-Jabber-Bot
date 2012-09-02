@@ -72,7 +72,8 @@ class JabberBot implements Runnable
     private XMPPConnection connection;
     private boolean status = true;
     private Calendar StartUp;
-    private long curRSS_id = 0, maxRSS_id = 0;
+    private String curRSS_id = "0";
+    private long maxRSS_id = 0;
     private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
@@ -922,11 +923,12 @@ class JabberBot implements Runnable
         				{
         					//Получаем одну RSS ленту
         					
-        					curRSS_id = RSS_id;
+        					curRSS_id = ""+RSS_id+"";
         					
         					//Проверяем и получаем новые записи для этой ленты
-        					List<String> data = db.getNew(RSS_id,Ignore_errors);
+        					curRSS_id += "f";List<String> data = db.getNew(RSS_id,Ignore_errors);curRSS_id += "F";
         					
+        					curRSS_id += "p";
         					if (data==null)
         					{
         						if (!Ignore_errors) {
@@ -949,11 +951,13 @@ class JabberBot implements Runnable
         					if (bbcount+bboffcount+1!=data.size()) {
         						LOG.fatal("Data sizes do not match!");
         					}
+        					curRSS_id += "P";
         					
         					//--------------------------------------------------------------------------------------------------------------------        					
         					//Отправка сообщений с BB кодами
+        					curRSS_id += "S";
         					for (messagespos=1; messagespos<bbcount+1; messagespos++) {
-        						messages=data.get(messagespos);
+        						messages=data.get(messagespos);curRSS_id += "("+messagespos+"/"+bbcount+")";
         						if(messages.length()!=0)
             					{
             						//Узнаем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
@@ -979,8 +983,9 @@ class JabberBot implements Runnable
         					//--------------------------------------------------------------------------------------------------------------------
         					
         					//Отправка сообщений без BB кодов
+        					curRSS_id += "s";
         					for (messagespos=bbcount+1; messagespos<bbcount+bboffcount+1; messagespos++) {
-        						messages_bboff=data.get(messagespos);
+        						messages_bboff=data.get(messagespos);curRSS_id += "("+(messagespos-bbcount)+"/"+bboffcount+")";
         						if(messages_bboff.length()!=0)
             					{
             						//Узнаем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
@@ -1007,7 +1012,8 @@ class JabberBot implements Runnable
         					//LOG.info("RSSFeed"+id+" sent...");
         			
         				}//end for
-        				curRSS_id = maxRSS_id = 0;
+        				maxRSS_id = 0;
+        				curRSS_id = "0";
         				LOG.info("Update finished.");
         				
         		    }catch(Exception e){LOG.error("ERROR_XMPP:",e);}
