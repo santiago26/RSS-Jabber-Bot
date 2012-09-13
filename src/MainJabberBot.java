@@ -77,7 +77,7 @@ class JabberBot implements Runnable
     private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
-    String Revision = "2012 09b03t";
+    String Revision = "2012 09b04t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -960,6 +960,7 @@ class JabberBot implements Runnable
         						messages=data.get(messagespos);curRSS_id += "("+messagespos+"/"+bbcount+")";
         						if(messages.length()!=0)
             					{
+                					LOG.info("Feed "+RSS_id);
             						//Узнаем кто подписан на текущую ленту и отсылаем ему сообщение с новыми новостями из ленты
             						//LOG.info("----------------[ NEW titles... ]----------------");
             						for (String jid : db.listRSSUsers(RSS_id,1,0))
