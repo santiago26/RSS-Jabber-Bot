@@ -35,6 +35,7 @@ class database
 	String dbConn = account.dbConn;
 	private static Object Mutex;
 	private long MAX_STANZAS = 32500;
+	private List<Long> RSS_debug;
 	
  	public database() 
 	{
@@ -54,6 +55,9 @@ class database
 			//LOG.info("Subscriptions created...");
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS CONF (Entry_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, User_id INTEGER NOT NULL, User TEXT NOT NULL, FOREIGN KEY(User_id) REFERENCES USERS(User_id));");
 			//LOG.info("ConfControl created...");
+			RSS_debug = new ArrayList<Long>();
+			RSS_debug.add((long) 42);
+			RSS_debug.add((long) 176);
 		}catch(Exception e){LOG.error("ERROR_SQL:",e);}
 	}
 	//New user: INSERT INTO USERS (Jabber) VALUES ('<jabber>');
@@ -153,6 +157,7 @@ class database
 		List<String> message = new ArrayList<String>();
 		//Получаем заголовоки ленты
 		//System.out.println("Start GetNew "+RSS_id);
+		if (RSS_debug.contains(RSS_id)) LOG.debug("Start GetNew "+RSS_id);
 		try
 		{
 			//Загружаем инфу о текущей ленте
@@ -165,18 +170,21 @@ class database
 			synchronized (Mutex) {
 				ResultSet rs;
 				//System.out.println("Entered Mutex Init");
+				if (RSS_debug.contains(RSS_id)) LOG.debug("Entered Mutex Init");
 				rs=st.executeQuery("SELECT * FROM RSS WHERE RSS_id="+RSS_id+";");
 
 				if (!(rs.next()))
 				{
 					LOG.fatal("FUCK THIS SYSTEM!");
 					//System.out.println("Left Mutex Init");
+					if (RSS_debug.contains(RSS_id)) LOG.debug("Left Mutex Init");
 					Mutex.notify();
 					return null;
 				}
 				if ((rs.getLong("Needs_syntax_recheck")==1)&&(!forced))
 				{
 					//System.out.println("Left Mutex Init");
+					if (RSS_debug.contains(RSS_id)) LOG.debug("Left Mutex Init");
 					Mutex.notify();
 					message.add(msg);
 					message.add(msg_bboff);
@@ -193,24 +201,30 @@ class database
 				NSR=(rs.getLong("Needs_syntax_recheck")==1);
 				rs.close();
 				//System.out.println("Left Mutex Init");
+				if (RSS_debug.contains(RSS_id)) LOG.debug("Left Mutex Init");
 				Mutex.notify();
 			}
 			
 
 			//Подключаемся к интернетам
 			//LOG.info(RSS_id+"("+RSS_link+")");
+			if (RSS_debug.contains(RSS_id)) LOG.debug(RSS_id+"("+RSS_link+")");
 			URL feedUrl = new URL(RSS_link);
+			if (RSS_debug.contains(RSS_id)) LOG.debug("new URL");
 			//URLConnection feedCon = feedUrl.openConnection();
 			//feedCon.setConnectTimeout(10000);
 			try
 			{
 				SyndFeedInput input = new SyndFeedInput();
+				if (RSS_debug.contains(RSS_id)) LOG.debug("new SyndFeedInput");
 				XmlReader reader = new XmlReader(feedUrl);
+				if (RSS_debug.contains(RSS_id)) LOG.debug("new XmlReader");
 				//XmlReader reader = new XmlReader(feedCon);
 				try
 				{
 					SyndFeed RSS_feed = input.build(reader);
 					//System.out.println("Entered Stream");
+					if (RSS_debug.contains(RSS_id)) LOG.debug("Entered Stream");
 					//Большой разнос по категории ленты для проверки наличия обновлений
 					//0-timestamp,1-guid/uri,2-link,3-title;
 					switch (RSS_category.intValue()){
@@ -252,9 +266,11 @@ class database
 						if (Update>RSS_last_timestamp)
 						{
 							//System.out.println("Start refresh");
+							if (RSS_debug.contains(RSS_id)) LOG.debug("start Refresh");
 							//Получаем новые ленты
 							for (Object object : RSS_feed.getEntries()){
 								SyndEntry entry = (SyndEntry) object;
+								if (RSS_debug.contains(RSS_id)) LOG.debug("entry object");
 								
 								if (((!updated)?entry.getPublishedDate():entry.getUpdatedDate()) ==null) continue;
 								if (((!updated)?entry.getPublishedDate().getTime():entry.getUpdatedDate().getTime()) <=RSS_last_timestamp){
@@ -285,6 +301,8 @@ class database
 									if ((postAuthor==null)||(postAuthor==""))
 									{postAuthor="UNKNOWN";}
 								}
+								
+								if (RSS_debug.contains(RSS_id)) LOG.debug("elements loaded");
 
 								msg_bboff +=postTitle+"\n";
 								msg_bboff +=postLink+"\n";	                            	
@@ -306,6 +324,8 @@ class database
 									msg +=html2bb.parse(contents.getValue());
 									msg_bboff +=html2bb.parse_bboff(contents.getValue());
 								}
+								
+								if (RSS_debug.contains(RSS_id)) LOG.debug("contents loaded");
 
 								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
 								if(entry.getContents().size() != 0)
@@ -323,6 +343,8 @@ class database
 									msg +=html2bb.parse(content.getValue());
 									msg_bboff +=html2bb.parse_bboff(content.getValue());
 								}
+								
+								if (RSS_debug.contains(RSS_id)) LOG.debug("description loaded");
 
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
@@ -346,6 +368,7 @@ class database
 								msg="";
 								msg_bboff="";
 								//System.out.println("Post built");
+								if (RSS_debug.contains(RSS_id)) LOG.debug("Post built");
 							}
 							UpdateDone=true;
 						}
@@ -354,6 +377,7 @@ class database
 						}
 						if ((UpdateDone)||(Already_failed)){
 							//Собираем последний пост в сообщение
+							if (RSS_debug.contains(RSS_id)) LOG.debug("Saving last post");
 							String Content="";
 							String Contentbb="";
 							{
@@ -382,6 +406,8 @@ class database
 									if ((postAuthor==null)||(postAuthor==""))
 									{postAuthor="UNKNOWN";}
 								}
+								
+								if (RSS_debug.contains(RSS_id)) LOG.debug("elements loaded");
 
 								Content +=postTitle+"\n";
 								Content +=postLink+"\n";	                            	
@@ -434,6 +460,8 @@ class database
 									Content =Content.substring(0, Content.length()-2);
 									Contentbb +="[/size][/i]";
 								}
+								
+								if (RSS_debug.contains(RSS_id)) LOG.debug("Save built");
 
 								Contentbb +="[/quote]\n";
 								Content +="\n------------------------------------------------------------------\n";
@@ -441,6 +469,7 @@ class database
 							//Сохраняем новую дату публикации
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex refresh");
+								if (RSS_debug.contains(RSS_id)) LOG.debug("Entered Mutex refresh");
 								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_timestamp="+Update+", RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL, Needs_syntax_recheck=0 WHERE RSS_id="+RSS_id+";");
 								try {
 									prepUpdate.setBytes(1, Content.getBytes("UTF-8"));
@@ -448,6 +477,7 @@ class database
 								}catch(UnsupportedEncodingException e1){LOG.info(RSS_id+"("+RSS_link+")");LOG.error("ERROR_ERROR:",e1);}
 								prepUpdate.execute();
 								//System.out.println("Left Mutex refresh");
+								if (RSS_debug.contains(RSS_id)) LOG.debug("Left Mutex refresh");
 								Mutex.notify();
 							}
 						}
@@ -1144,6 +1174,7 @@ class database
 					}break;
 					default:{
 						LOG.fatal("FUCK THIS SYSTEM!");
+						if (RSS_debug.contains(RSS_id)) LOG.debug("default fatal");
 						reader.close();
 						return null;
 					}
@@ -1252,6 +1283,7 @@ class database
 		}catch(Exception e){LOG.error("ERROR_URL:",e);}
 
 		//Добавляем в List сообщения с бб кодами и без бб кодов
+		if (RSS_debug.contains(RSS_id)) LOG.debug("preparing update");
 		msg="";
 		msg_bboff="";
 		
@@ -1281,6 +1313,7 @@ class database
 		mesbbCol.clear();
 		mesbbCol.addAll(message);
 		message.clear();
+		if (RSS_debug.contains(RSS_id)) LOG.debug("BBupdated");
 		
 		//noBB
 		for (String post : mesCol)
@@ -1298,12 +1331,14 @@ class database
 		mesCol.clear();
 		mesCol.addAll(message);
 		message.clear();
+		if (RSS_debug.contains(RSS_id)) LOG.debug("noBBupdated");
 
 		//flushing
 		message.add(mesbbCol.size()+" "+mesCol.size());
 		message.addAll(mesbbCol);
 		message.addAll(mesCol);
 		//System.out.println(">>Message built<<");
+		if (RSS_debug.contains(RSS_id)) LOG.debug(">>Message built<<");
 		return message;
 	}
 	
