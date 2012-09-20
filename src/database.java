@@ -57,7 +57,9 @@ class database
 			//LOG.info("ConfControl created...");
 			RSS_debug = new ArrayList<Long>();
 			RSS_debug.add((long) 42);
+			RSS_debug.add((long) 100);
 			RSS_debug.add((long) 176);
+			RSS_debug.add((long) 205);
 		}catch(Exception e){LOG.error("ERROR_SQL:",e);}
 	}
 	//New user: INSERT INTO USERS (Jabber) VALUES ('<jabber>');
@@ -73,7 +75,7 @@ class database
 		try 
 		{
 			synchronized (Mutex) {
-				ResultSet rs = st.executeQuery("SELECT RSS_id FROM RSS ORDER BY RSS_id ASC");
+				ResultSet rs = st.executeQuery("SELECT RSS.RSS_id FROM RSS JOIN SUBS ON SUBS.RSS_id=RSS.RSS_id WHERE Sub_pause=0 GROUP BY RSS.RSS_id ORDER BY RSS.RSS_id ASC;");
 				while(rs.next()){rss_list.add(rs.getLong("RSS_id"));}
 				rs.close();
 				Mutex.notify();
