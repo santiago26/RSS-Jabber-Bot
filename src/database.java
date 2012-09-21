@@ -56,10 +56,6 @@ class database
 			st.executeUpdate("CREATE TABLE IF NOT EXISTS CONF (Entry_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, User_id INTEGER NOT NULL, User TEXT NOT NULL, FOREIGN KEY(User_id) REFERENCES USERS(User_id));");
 			//LOG.info("ConfControl created...");
 			RSS_debug = new ArrayList<Long>();
-			RSS_debug.add((long) 42);
-			RSS_debug.add((long) 100);
-			RSS_debug.add((long) 176);
-			RSS_debug.add((long) 205);
 		}catch(Exception e){LOG.error("ERROR_SQL:",e);}
 	}
 	//New user: INSERT INTO USERS (Jabber) VALUES ('<jabber>');
@@ -219,7 +215,7 @@ class database
 			{
 				SyndFeedInput input = new SyndFeedInput();
 				if (RSS_debug.contains(RSS_id)) LOG.debug("new SyndFeedInput");
-				XmlReader reader = new XmlReader(feedUrl);
+				XmlReader reader = new XmlReader(feedUrl);//FREEZE HERE. Connection freeze
 				if (RSS_debug.contains(RSS_id)) LOG.debug("new XmlReader");
 				//XmlReader reader = new XmlReader(feedCon);
 				try
