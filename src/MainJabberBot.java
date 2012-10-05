@@ -77,7 +77,7 @@ class JabberBot implements Runnable
     private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
-    String Revision = "2012 10b02t";
+    String Revision = "2012 10b03t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -799,7 +799,9 @@ class JabberBot implements Runnable
                     LOG.info(MJID+" invitation from "+Issuer);
                     LOG.info("+++++++++++++++++++++++++++++++++++++++++++++[SYSTEM END]");
                     
-                    if (db.getUGroup(Issuer).equals("Ban")) {
+                    Issuer=Issuer.substring(Issuer.indexOf("/"));
+                    
+                    if ((db.getUGroup(Issuer).equals("Ban"))||(!db.isUser(Issuer))) {
                     	LOG.info("Ignored");
                     	sendMessage(Issuer,"Не удалось присоедениться. Проверьте настройки комнаты и попробуйте еще раз.");
                     	return;
