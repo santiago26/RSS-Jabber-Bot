@@ -77,7 +77,7 @@ class JabberBot implements Runnable
     private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
-    String Revision = "2012 10b01t";
+    String Revision = "2012 10b02t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -464,6 +464,7 @@ class JabberBot implements Runnable
                             				}break;
                             				case "remuser": {
                             					String DJID = messageBody.substring(messageBody.indexOf(" ")+1);
+                            					if (db.isConf(DJID)) leaveMUC(DJID);
                             					db.remUser(DJID);
                             					sendMessage(JID,"User "+DJID+" removed!");
                             					MessageProcessed=true;
@@ -797,6 +798,12 @@ class JabberBot implements Runnable
 					LOG.info("+++++++++++++++++++++++++++++++++++++++++++++[SYSTEM START]");
                     LOG.info(MJID+" invitation from "+Issuer);
                     LOG.info("+++++++++++++++++++++++++++++++++++++++++++++[SYSTEM END]");
+                    
+                    if (db.getUGroup(Issuer).equals("Ban")) {
+                    	LOG.info("Ignored");
+                    	sendMessage(Issuer,"Не удалось присоедениться. Проверьте настройки комнаты и попробуйте еще раз.");
+                    	return;
+                    }
                     
                     MultiUserChat muc = new MultiUserChat(connection,MJID);
                     if (muc.isJoined()) return;

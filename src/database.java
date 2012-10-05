@@ -1821,6 +1821,38 @@ class database
 		return;
 	}
 	
+	public boolean isConf(String MJID) {
+		ResultSet rs;
+		try
+		{
+			synchronized (Mutex)
+			{
+				rs = st.executeQuery("SELECT Is_conf FROM USERS WHERE Jabber='"+MJID+"';");
+				if (rs.next())
+				{
+					if (rs.getInt("Is_conf")==1) {
+						rs.close();
+						Mutex.notify();
+						return true;
+					}
+					else {
+						rs.close();
+						Mutex.notify();
+						return false;
+					}
+					
+				}
+				else
+				{
+					rs.close();
+					Mutex.notify();
+					return false;
+				}
+			}
+		}catch(SQLException e){LOG.error("ERROR_SQL:",e);}
+		return false;
+	}
+	
 	public boolean isCA(String MJID, String User) {
 		ResultSet rs;
 		try {
