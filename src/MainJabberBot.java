@@ -799,7 +799,7 @@ class JabberBot implements Runnable
                     LOG.info(MJID+" invitation from "+Issuer);
                     LOG.info("+++++++++++++++++++++++++++++++++++++++++++++[SYSTEM END]");
                     
-                    Issuer=Issuer.substring(Issuer.indexOf("/"));
+                    Issuer=Issuer.replaceAll("^(.*?)[/](.*+)$","$1").toLowerCase();
                     
                     if ((db.getUGroup(Issuer).equals("Ban"))||(!db.isUser(Issuer))) {
                     	LOG.info("Ignored");
