@@ -77,7 +77,7 @@ class JabberBot implements Runnable
     private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
-    String Revision = "2012 10b03t";
+    String Revision = "2012 10b04t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -659,6 +659,12 @@ class JabberBot implements Runnable
                                 			}break;
                                 		}
                         			}
+                        			case "Ban":{
+                        				if (!MessageProcessed) {
+                        					sendMessage(JID,"FUCK OFF, ASSHOLE!");
+                        					MessageProcessed = true;
+                        				}
+                        			}
                         			default: {
                         				if (!MessageProcessed) {
                                 			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -803,7 +809,7 @@ class JabberBot implements Runnable
                     
                     if ((db.getUGroup(Issuer).equals("Ban"))||(!db.isUser(Issuer))) {
                     	LOG.info("Ignored");
-                    	sendMessage(Issuer,"Не удалось присоедениться. Проверьте настройки комнаты и попробуйте еще раз.");
+                    	sendMessage(Issuer,"FUCK OFF, ASSHOLE!");
                     	return;
                     }
                     
