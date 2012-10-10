@@ -77,7 +77,7 @@ class JabberBot implements Runnable
     private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
-    String Revision = "2012 10b05t";
+    String Revision = "2012 10b06t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -290,7 +290,7 @@ class JabberBot implements Runnable
                         		}
 
                         		switch (db.getUGroup(JID)) {
-                    				case "Ban":{
+                    				case "Ban":case "No such user!": case "UNKNOWN":{
                     					sendMessage(JID,"FUCK OFF, ASSHOLE!");
                     					MessageProcessed = true;
                     				}break;
