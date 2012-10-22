@@ -77,7 +77,7 @@ class JabberBot implements Runnable
     private boolean Stop_refresh = false, Ignore_errors = true;
     private String TransferName = "";
     String Login = account.Login, Password = account.Password, Domain = account.Domain, mucName = account.mucName;
-    String Revision = "2012 10b06t";
+    String Revision = "2012 10b07t";
     
     String help = "rssbot@qip.ru - XMPP(jabber) бот, рассылающий новостные RSS ленты, оформленные в BB-коды.\n" +
 			"--------------------------------------------------------\n" +
@@ -138,6 +138,7 @@ class JabberBot implements Runnable
             "users - покажет всех зарегистрированых пользователей.\n" +
             "close - выключит меня полностью.\n" +
             "restart - перезапустит меня, в надежде исправить какой-то глюк или загрузить новую сборку.\n" +
+            "rejoin - добавит уверенности присутствия в конференциях.\n" +
             "empty - пустит меня в плаванье по подпискам и лентам для нахождения лент без подписоки их уничтожения.\n" +
             "rev/revision - почешет твое ЧСВ и покажет номер моей сборки.\n" +
             "pingdb - потыкает БД палочкой.\n" +
@@ -382,6 +383,7 @@ class JabberBot implements Runnable
                             					MessageProcessed = true;
                             				}break;
                             				case "close":case "сгинь": {
+                            					sendMessage(JID, "Сам напросился...");
                             					connection.disconnect();
                             					MessageProcessed = true;
                             					status = false;
@@ -389,14 +391,33 @@ class JabberBot implements Runnable
                             					System.exit(0);
                             				}break;
                             				case "restart": {
+                            					sendMessage(JID, "Хорошо-хорошо, уже.");
                             					connection.disconnect();
                             					MessageProcessed = true;
                             					status = false;
                             					LOG.info("Перезапуск программы!");
                             					restartApplication();
                             				}break;
+                            				case "rejoin": {
+                            					//Заходим в конференции
+                            		            for (String MJID : db.listConf()) {
+                            		            	MultiUserChat muc = new MultiUserChat(connection,MJID);
+                            		                if (muc.isJoined()) break;
+                            		                DiscussionHistory history = new DiscussionHistory();
+                            		                history.setMaxChars(0);
+                            		                try {
+                            							muc.join(mucName, "", history, SmackConfiguration.getPacketReplyTimeout());
+                            							//muc.sendMessage("Скучали?/Have you missed me?");
+                            							//Issuer=muc.getOccupant(Issuer).getJid().replaceAll("(.*?)[/].*","$1").toLowerCase();
+                            							System.out.println("plMUC for " + MJID);
+                            						}catch(XMPPException e){LOG.error("ERROR_MUC("+MJID+"):",e);}
+                            		            }
+                            		            sendMessage(JID, "Ну я попытался :)");
+                            		            MessageProcessed = true;
+                            				}break;
                             				case "empty": {
                             					db.deleteEmpty();
+                            					sendMessage(JID, "Гатова");
                             					MessageProcessed = true;
                             				}break;
                             				case "crss": {
@@ -453,6 +474,7 @@ class JabberBot implements Runnable
                             				}break;
                             				case "noerrors": {
                             					Ignore_errors=!Ignore_errors;
+                            					sendMessage(JID, "Режим переключен");
                             					MessageProcessed = true;
                             				}break;
                             				case "getlink": {
