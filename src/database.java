@@ -1,4 +1,4 @@
-import java.io.UnsupportedEncodingException;
+п»їimport java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -57,7 +57,7 @@ class database
 	//New Sub: INSERT INTO SUBS (User_id, RSS_id) VALUES(<User>,<RSS>);
 	//New CA: INSERT INTO CONF (User_id, User) VALUES(<User>,<Nickname>);
 	
-	//Получаем все RSS_id каналов из базы данных
+	//РџРѕР»СѓС‡Р°РµРј РІСЃРµ RSS_id РєР°РЅР°Р»РѕРІ РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 	public List<Long> listRSSFeeds()
 	{
 		System.out.println("Select all RSS feeds.");
@@ -75,7 +75,7 @@ class database
 		return rss_list;
 	}
 		
-	//Получаем все связки подписок
+	//РџРѕР»СѓС‡Р°РµРј РІСЃРµ СЃРІСЏР·РєРё РїРѕРґРїРёСЃРѕРє
 	public List<String> listSubs() {
 		System.out.println("Select all Subs.");
 		List<String> subs_list = new ArrayList<String>();
@@ -91,7 +91,7 @@ class database
 		return subs_list;
 	}
 	
-	//Получаем все MJID подписанных конференций
+	//РџРѕР»СѓС‡Р°РµРј РІСЃРµ MJID РїРѕРґРїРёСЃР°РЅРЅС‹С… РєРѕРЅС„РµСЂРµРЅС†РёР№
  	public List<String> listConf() {
 		System.out.println("Select all Conferences.");
 		List<String> conf_list = new ArrayList<String>();
@@ -107,7 +107,7 @@ class database
 		return conf_list;
 	}
 	
-	//Получаем все MJID подписанных конференций
+	//РџРѕР»СѓС‡Р°РµРј РІСЃРµ MJID РїРѕРґРїРёСЃР°РЅРЅС‹С… РєРѕРЅС„РµСЂРµРЅС†РёР№
 	public List<String> listUsers() {
 		System.out.println("Select all Users.");
 		List<String> conf_list = new ArrayList<String>();
@@ -123,7 +123,7 @@ class database
 		return conf_list;
 	}
 	
-	//Получаем все MJID подписанных конференций
+	//РџРѕР»СѓС‡Р°РµРј РІСЃРµ MJID РїРѕРґРїРёСЃР°РЅРЅС‹С… РєРѕРЅС„РµСЂРµРЅС†РёР№
 	public List<Long> listErrors() {
 		System.out.println("Select all Errors.");
 		List<Long> error_list = new ArrayList<Long>();
@@ -139,19 +139,19 @@ class database
 		return error_list;
 	}
 	
-	//Проверяем новые записи в ленте
+	//РџСЂРѕРІРµСЂСЏРµРј РЅРѕРІС‹Рµ Р·Р°РїРёСЃРё РІ Р»РµРЅС‚Рµ
 	public List<String> getNew(long RSS_id, boolean forced)
 	{
-		String msg = "";//Переменная для формирования сообщения в bb кодах
-		String msg_bboff = "";//Переменная для формирования сообщения без bb кодов
+		String msg = "";//РџРµСЂРµРјРµРЅРЅР°СЏ РґР»СЏ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ РІ bb РєРѕРґР°С…
+		String msg_bboff = "";//РџРµСЂРµРјРµРЅРЅР°СЏ РґР»СЏ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ Р±РµР· bb РєРѕРґРѕРІ
 		List<String> mesbbCol = new ArrayList<String>();
 		List<String> mesCol = new ArrayList<String>();
 		List<String> message = new ArrayList<String>();
-		//Получаем заголовоки ленты
+		//РџРѕР»СѓС‡Р°РµРј Р·Р°РіРѕР»РѕРІРѕРєРё Р»РµРЅС‚С‹
 		//System.out.println("Start GetNew "+RSS_id);
 		try
 		{
-			//Загружаем инфу о текущей ленте
+			//Р—Р°РіСЂСѓР¶Р°РµРј РёРЅС„Сѓ Рѕ С‚РµРєСѓС‰РµР№ Р»РµРЅС‚Рµ
 			String RSS_link;
 			Long RSS_category;
 			String RSS_last_thingy;
@@ -179,7 +179,7 @@ class database
 					return message;
 				}
 
-				//Вгружаем инфу о ленте в переменные (Да, мне лень дергать rs по каждому поводу)
+				//Р’РіСЂСѓР¶Р°РµРј РёРЅС„Сѓ Рѕ Р»РµРЅС‚Рµ РІ РїРµСЂРµРјРµРЅРЅС‹Рµ (Р”Р°, РјРЅРµ Р»РµРЅСЊ РґРµСЂРіР°С‚СЊ rs РїРѕ РєР°Р¶РґРѕРјСѓ РїРѕРІРѕРґСѓ)
 				RSS_link=rs.getString("RSS_link");
 				RSS_category=rs.getLong("RSS_by_cat");
 				RSS_last_thingy=rs.getString("RSS_last_thingy");
@@ -193,7 +193,7 @@ class database
 			}
 			
 
-			//Подключаемся к интернетам
+			//РџРѕРґРєР»СЋС‡Р°РµРјСЃСЏ Рє РёРЅС‚РµСЂРЅРµС‚Р°Рј
 			//LOG.info(RSS_id+"("+RSS_link+")");
 			URL feedUrl = new URL(RSS_link);
 			URLConnection feedCon = feedUrl.openConnection();
@@ -208,10 +208,10 @@ class database
 				{
 					SyndFeed RSS_feed = input.build(reader);
 					//System.out.println("Entered Stream");
-					//Большой разнос по категории ленты для проверки наличия обновлений
+					//Р‘РѕР»СЊС€РѕР№ СЂР°Р·РЅРѕСЃ РїРѕ РєР°С‚РµРіРѕСЂРёРё Р»РµРЅС‚С‹ РґР»СЏ РїСЂРѕРІРµСЂРєРё РЅР°Р»РёС‡РёСЏ РѕР±РЅРѕРІР»РµРЅРёР№
 					//0-timestamp,1-guid/uri,2-link,3-title;
 					switch (RSS_category.intValue()){
-					case 0:{//Означает, что в каждом посте есть дата публикации или обновления(что б вас через колено)
+					case 0:{//РћР·РЅР°С‡Р°РµС‚, С‡С‚Рѕ РІ РєР°Р¶РґРѕРј РїРѕСЃС‚Рµ РµСЃС‚СЊ РґР°С‚Р° РїСѓР±Р»РёРєР°С†РёРё РёР»Рё РѕР±РЅРѕРІР»РµРЅРёСЏ(С‡С‚Рѕ Р± РІР°СЃ С‡РµСЂРµР· РєРѕР»РµРЅРѕ)
 						boolean updated=false;
 						if (( (SyndEntry)RSS_feed.getEntries().get(0) ).getPublishedDate() ==null) updated=true;
 						if (
@@ -227,7 +227,7 @@ class database
 										).getUpdatedDate() ==null
 								) 
 						){
-							//Категория неверна. Заморозка и выход.
+							//РљР°С‚РµРіРѕСЂРёСЏ РЅРµРІРµСЂРЅР°. Р—Р°РјРѕСЂРѕР·РєР° Рё РІС‹С…РѕРґ.
 							synchronized (Mutex) {
 								System.out.println("Entered Mutex Error");
 								PreparedStatement prepError = conn.prepareStatement("UPDATE RSS SET Needs_syntax_recheck=1, Syntax_error=? WHERE RSS_id="+RSS_id+";");
@@ -249,7 +249,7 @@ class database
 						if (Update>RSS_last_timestamp)
 						{
 							//System.out.println("Start refresh");
-							//Получаем новые ленты
+							//РџРѕР»СѓС‡Р°РµРј РЅРѕРІС‹Рµ Р»РµРЅС‚С‹
 							for (Object object : RSS_feed.getEntries()){
 								SyndEntry entry = (SyndEntry) object;
 								
@@ -290,8 +290,8 @@ class database
 								
 								msg +="[i][size=\"8\"]";
 								if (!postAuthor.equals("UNKNOWN")){
-									msg_bboff +="Автор: "+postAuthor+" ";
-									msg +="Автор: "+postAuthor+" ";
+									msg_bboff +="РђРІС‚РѕСЂ: "+postAuthor+" ";
+									msg +="РђРІС‚РѕСЂ: "+postAuthor+" ";
 								}
 								msg_bboff +="("+postDate+")\n";
 								msg +="("+postDate+")[/size][/i]\n";
@@ -304,7 +304,7 @@ class database
 									msg_bboff +=html2bb.parse_bboff(contents.getValue());
 								}
 								
-								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
+								//Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРЅС‚РµРЅС‚ Рё РІ getContents, Рё РІ getDescription
 								if(entry.getContents().size() != 0)
 								{
 									if((entry.getDescription())!= null)
@@ -323,7 +323,7 @@ class database
 								
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
-									msg_bboff +="\nТеги: ";
+									msg_bboff +="\nРўРµРіРё: ";
 									msg +="\n[i][size=\"8\"]";
 									for (SyndCategoryImpl Cat : postCategories)
 									{
@@ -347,10 +347,10 @@ class database
 							UpdateDone=true;
 						}
 						else {
-							//Обновлений нету
+							//РћР±РЅРѕРІР»РµРЅРёР№ РЅРµС‚Сѓ
 						}
 						if ((UpdateDone)||(Already_failed)){
-							//Собираем последний пост в сообщение
+							//РЎРѕР±РёСЂР°РµРј РїРѕСЃР»РµРґРЅРёР№ РїРѕСЃС‚ РІ СЃРѕРѕР±С‰РµРЅРёРµ
 							String Content="";
 							String Contentbb="";
 							{
@@ -387,8 +387,8 @@ class database
 
 								Contentbb +="[i][size=\"8\"]";
 								if (!postAuthor.equals("UNKNOWN")){
-									Content +="Автор: "+postAuthor+" ";
-									Contentbb +="Автор: "+postAuthor+" ";
+									Content +="РђРІС‚РѕСЂ: "+postAuthor+" ";
+									Contentbb +="РђРІС‚РѕСЂ: "+postAuthor+" ";
 								}
 								Content +="("+postDate+")\n";
 								Contentbb +="("+postDate+")[/size][/i]\n";
@@ -401,7 +401,7 @@ class database
 									Content +=html2bb.parse_bboff(contents.getValue());
 								}
 
-								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
+								//Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРЅС‚РµРЅС‚ Рё РІ getContents, Рё РІ getDescription
 								if(entry.getContents().size() != 0)
 								{
 									if((entry.getDescription())!= null)
@@ -420,7 +420,7 @@ class database
 
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
-									Content +="\nТеги: ";
+									Content +="\nРўРµРіРё: ";
 									Contentbb +="\n[i][size=\"8\"]";
 									for (SyndCategoryImpl Cat : postCategories)
 									{
@@ -435,7 +435,7 @@ class database
 								Contentbb +="[/quote]\n";
 								Content +="\n------------------------------------------------------------------\n";
 							}
-							//Сохраняем новую дату публикации
+							//РЎРѕС…СЂР°РЅСЏРµРј РЅРѕРІСѓСЋ РґР°С‚Сѓ РїСѓР±Р»РёРєР°С†РёРё
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex refresh");
 								PreparedStatement prepUpdate = conn.prepareStatement("UPDATE RSS SET RSS_last_timestamp="+Update+", RSS_last_content=?, RSS_lastbb_content=?, Syntax_error=NULL, Needs_syntax_recheck=0 WHERE RSS_id="+RSS_id+";");
@@ -448,10 +448,10 @@ class database
 								Mutex.notify();
 							}
 						}
-					}break;//Означает, что дату публикации тырим из ленты, если возможно
+					}break;//РћР·РЅР°С‡Р°РµС‚, С‡С‚Рѕ РґР°С‚Сѓ РїСѓР±Р»РёРєР°С†РёРё С‚С‹СЂРёРј РёР· Р»РµРЅС‚С‹, РµСЃР»Рё РІРѕР·РјРѕР¶РЅРѕ
 					case 1:{
 						if (((SyndEntry)(RSS_feed.getEntries().get(0))).getUri()==null){
-							//Категория неверна. Заморозка и выход.
+							//РљР°С‚РµРіРѕСЂРёСЏ РЅРµРІРµСЂРЅР°. Р—Р°РјРѕСЂРѕР·РєР° Рё РІС‹С…РѕРґ.
 							synchronized (Mutex) {
 								System.out.println("Entered Mutex Error");
 								PreparedStatement prepError = conn.prepareStatement("UPDATE RSS SET Needs_syntax_recheck=1, Syntax_error=? WHERE RSS_id="+RSS_id+";");
@@ -482,7 +482,7 @@ class database
 						if (!Update.equals(RSS_last_thingy))
 						{
 							//System.out.println("Start refresh");
-							//Получаем новые ленты
+							//РџРѕР»СѓС‡Р°РµРј РЅРѕРІС‹Рµ Р»РµРЅС‚С‹
 							for (Object object : RSS_feed.getEntries()){
 								SyndEntry entry = (SyndEntry) object;
 
@@ -518,8 +518,8 @@ class database
 
 								msg +="[i][size=\"8\"]";
 								if (!postAuthor.equals("UNKNOWN")){
-									msg_bboff +="Автор: "+postAuthor+" ";
-									msg +="Автор: "+postAuthor+" ";
+									msg_bboff +="РђРІС‚РѕСЂ: "+postAuthor+" ";
+									msg +="РђРІС‚РѕСЂ: "+postAuthor+" ";
 								}
 								msg_bboff +="("+postDate+")\n";
 								msg +="("+postDate+")[/size][/i]\n";
@@ -532,7 +532,7 @@ class database
 									msg_bboff +=html2bb.parse_bboff(contents.getValue());
 								}
 
-								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
+								//Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРЅС‚РµРЅС‚ Рё РІ getContents, Рё РІ getDescription
 								if(entry.getContents().size() != 0)
 								{
 									if((entry.getDescription())!= null)
@@ -551,7 +551,7 @@ class database
 
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
-									msg_bboff +="\nТеги: ";
+									msg_bboff +="\nРўРµРіРё: ";
 									msg +="\n[i][size=\"8\"]";
 									for (SyndCategoryImpl Cat : postCategories)
 									{
@@ -575,10 +575,10 @@ class database
 							UpdateDone=true;
 						}
 						else {
-							//Обновлений нету
+							//РћР±РЅРѕРІР»РµРЅРёР№ РЅРµС‚Сѓ
 						}
 						if ((UpdateDone)||(Already_failed)){
-							//Собираем последний пост в сообщение
+							//РЎРѕР±РёСЂР°РµРј РїРѕСЃР»РµРґРЅРёР№ РїРѕСЃС‚ РІ СЃРѕРѕР±С‰РµРЅРёРµ
 							String Content="";
 							String Contentbb="";
 							{
@@ -612,8 +612,8 @@ class database
 
 								Contentbb +="[i][size=\"8\"]";
 								if (!postAuthor.equals("UNKNOWN")){
-									Content +="Автор: "+postAuthor+" ";
-									Contentbb +="Автор: "+postAuthor+" ";
+									Content +="РђРІС‚РѕСЂ: "+postAuthor+" ";
+									Contentbb +="РђРІС‚РѕСЂ: "+postAuthor+" ";
 								}
 								Content +="("+postDate+")\n";
 								Contentbb +="("+postDate+")[/size][/i]\n";
@@ -626,7 +626,7 @@ class database
 									Content +=html2bb.parse_bboff(contents.getValue());
 								}
 
-								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
+								//Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРЅС‚РµРЅС‚ Рё РІ getContents, Рё РІ getDescription
 								if(entry.getContents().size() != 0)
 								{
 									if((entry.getDescription())!= null)
@@ -645,7 +645,7 @@ class database
 
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
-									Content +="\nТеги: ";
+									Content +="\nРўРµРіРё: ";
 									Contentbb +="\n[i][size=\"8\"]";
 									for (SyndCategoryImpl Cat : postCategories)
 									{
@@ -660,8 +660,8 @@ class database
 								Contentbb +="[/quote]\n";
 								Content +="\n------------------------------------------------------------------\n";
 							}
-							//Сохраняем новую дату публикации
-							//Экран для записи в БД
+							//РЎРѕС…СЂР°РЅСЏРµРј РЅРѕРІСѓСЋ РґР°С‚Сѓ РїСѓР±Р»РёРєР°С†РёРё
+							//Р­РєСЂР°РЅ РґР»СЏ Р·Р°РїРёСЃРё РІ Р‘Р”
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex Refresh");
 								Update=Update.replaceAll("'", "''");
@@ -679,7 +679,7 @@ class database
 					}break;
 					case 2:{
 						if (((SyndEntry)(RSS_feed.getEntries().get(0))).getLink()==null){
-							//Категория неверна. Заморозка и выход.
+							//РљР°С‚РµРіРѕСЂРёСЏ РЅРµРІРµСЂРЅР°. Р—Р°РјРѕСЂРѕР·РєР° Рё РІС‹С…РѕРґ.
 							synchronized (Mutex) {
 								System.out.println("Entered Mutex Error");
 								PreparedStatement prepError = conn.prepareStatement("UPDATE RSS SET Needs_syntax_recheck=1, Syntax_error=? WHERE RSS_id="+RSS_id+";");
@@ -710,7 +710,7 @@ class database
 						if (!Update.equals(RSS_last_thingy))
 						{
 							//System.out.println("Start refresh");
-							//Получаем новые ленты
+							//РџРѕР»СѓС‡Р°РµРј РЅРѕРІС‹Рµ Р»РµРЅС‚С‹
 							for (Object object : RSS_feed.getEntries()){
 								SyndEntry entry = (SyndEntry) object;
 
@@ -747,8 +747,8 @@ class database
 
 								msg +="[i][size=\"8\"]";
 								if (!postAuthor.equals("UNKNOWN")){
-									msg_bboff +="Автор: "+postAuthor+" ";
-									msg +="Автор: "+postAuthor+" ";
+									msg_bboff +="РђРІС‚РѕСЂ: "+postAuthor+" ";
+									msg +="РђРІС‚РѕСЂ: "+postAuthor+" ";
 								}
 								msg_bboff +="("+postDate+")\n";
 								msg +="("+postDate+")[/size][/i]\n";
@@ -761,7 +761,7 @@ class database
 									msg_bboff +=html2bb.parse_bboff(contents.getValue());
 								}
 
-								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
+								//Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРЅС‚РµРЅС‚ Рё РІ getContents, Рё РІ getDescription
 								if(entry.getContents().size() != 0)
 								{
 									if((entry.getDescription())!= null)
@@ -780,7 +780,7 @@ class database
 
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
-									msg_bboff +="\nТеги: ";
+									msg_bboff +="\nРўРµРіРё: ";
 									msg +="\n[i][size=\"8\"]";
 									for (SyndCategoryImpl Cat : postCategories)
 									{
@@ -804,10 +804,10 @@ class database
 							UpdateDone=true;
 						}
 						else {
-							//Обновлений нету
+							//РћР±РЅРѕРІР»РµРЅРёР№ РЅРµС‚Сѓ
 						}
 						if ((UpdateDone)||(Already_failed)){
-							//Собираем последний пост в сообщение
+							//РЎРѕР±РёСЂР°РµРј РїРѕСЃР»РµРґРЅРёР№ РїРѕСЃС‚ РІ СЃРѕРѕР±С‰РµРЅРёРµ
 							String Content="";
 							String Contentbb="";
 							{
@@ -841,8 +841,8 @@ class database
 
 								Contentbb +="[i][size=\"8\"]";
 								if (!postAuthor.equals("UNKNOWN")){
-									Content +="Автор: "+postAuthor+" ";
-									Contentbb +="Автор: "+postAuthor+" ";
+									Content +="РђРІС‚РѕСЂ: "+postAuthor+" ";
+									Contentbb +="РђРІС‚РѕСЂ: "+postAuthor+" ";
 								}
 								Content +="("+postDate+")\n";
 								Contentbb +="("+postDate+")[/size][/i]\n";
@@ -855,7 +855,7 @@ class database
 									Content +=html2bb.parse_bboff(contents.getValue());
 								}
 
-								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
+								//Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРЅС‚РµРЅС‚ Рё РІ getContents, Рё РІ getDescription
 								if(entry.getContents().size() != 0)
 								{
 									if((entry.getDescription())!= null)
@@ -874,7 +874,7 @@ class database
 
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
-									Content +="\nТеги: ";
+									Content +="\nРўРµРіРё: ";
 									Contentbb +="\n[i][size=\"8\"]";
 									for (SyndCategoryImpl Cat : postCategories)
 									{
@@ -889,7 +889,7 @@ class database
 								Contentbb +="[/quote]\n";
 								Content +="\n------------------------------------------------------------------\n";
 							}
-							//Сохраняем новую дату публикации
+							//РЎРѕС…СЂР°РЅСЏРµРј РЅРѕРІСѓСЋ РґР°С‚Сѓ РїСѓР±Р»РёРєР°С†РёРё
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex Refresh");
 								Update=Update.replaceAll("'", "''");
@@ -907,7 +907,7 @@ class database
 					}break;
 					case 3:{
 						if (((SyndEntry)(RSS_feed.getEntries().get(0))).getTitle()==null){
-							//Категория неверна. Заморозка и выход.
+							//РљР°С‚РµРіРѕСЂРёСЏ РЅРµРІРµСЂРЅР°. Р—Р°РјРѕСЂРѕР·РєР° Рё РІС‹С…РѕРґ.
 							synchronized (Mutex) {
 								System.out.println("Entered Mutex Error");
 								PreparedStatement prepError = conn.prepareStatement("UPDATE RSS SET Needs_syntax_recheck=1, Syntax_error=? WHERE RSS_id="+RSS_id+";");
@@ -938,7 +938,7 @@ class database
 						if (!Update.equals(RSS_last_thingy))
 						{
 							//System.out.println("Start refresh");
-							//Получаем новые ленты
+							//РџРѕР»СѓС‡Р°РµРј РЅРѕРІС‹Рµ Р»РµРЅС‚С‹
 							for (Object object : RSS_feed.getEntries()){
 								SyndEntry entry = (SyndEntry) object;
 
@@ -978,8 +978,8 @@ class database
 
 								msg +="[i][size=\"8\"]";
 								if (!postAuthor.equals("UNKNOWN")){
-									msg_bboff +="Автор: "+postAuthor+" ";
-									msg +="Автор: "+postAuthor+" ";
+									msg_bboff +="РђРІС‚РѕСЂ: "+postAuthor+" ";
+									msg +="РђРІС‚РѕСЂ: "+postAuthor+" ";
 								}
 								msg_bboff +="("+postDate+")\n";
 								msg +="("+postDate+")[/size][/i]\n";
@@ -992,7 +992,7 @@ class database
 									msg_bboff +=html2bb.parse_bboff(contents.getValue());
 								}
 
-								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
+								//Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРЅС‚РµРЅС‚ Рё РІ getContents, Рё РІ getDescription
 								if(entry.getContents().size() != 0)
 								{
 									if((entry.getDescription())!= null)
@@ -1011,7 +1011,7 @@ class database
 
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
-									msg_bboff +="\nТеги: ";
+									msg_bboff +="\nРўРµРіРё: ";
 									msg +="\n[i][size=\"8\"]";
 									for (SyndCategoryImpl Cat : postCategories)
 									{
@@ -1035,10 +1035,10 @@ class database
 							UpdateDone=true;
 						}
 						else {
-							//Обновлений нету
+							//РћР±РЅРѕРІР»РµРЅРёР№ РЅРµС‚Сѓ
 						}
 						if ((UpdateDone)||(Already_failed)){
-							//Собираем последний пост в сообщение
+							//РЎРѕР±РёСЂР°РµРј РїРѕСЃР»РµРґРЅРёР№ РїРѕСЃС‚ РІ СЃРѕРѕР±С‰РµРЅРёРµ
 							String Content="";
 							String Contentbb="";
 							{
@@ -1075,8 +1075,8 @@ class database
 
 								Contentbb +="[i][size=\"8\"]";
 								if (!postAuthor.equals("UNKNOWN")){
-									Content +="Автор: "+postAuthor+" ";
-									Contentbb +="Автор: "+postAuthor+" ";
+									Content +="РђРІС‚РѕСЂ: "+postAuthor+" ";
+									Contentbb +="РђРІС‚РѕСЂ: "+postAuthor+" ";
 								}
 								Content +="("+postDate+")\n";
 								Contentbb +="("+postDate+")[/size][/i]\n";
@@ -1089,7 +1089,7 @@ class database
 									Content +=html2bb.parse_bboff(contents.getValue());
 								}
 
-								//Добавляем перенос строки, так как может быть контент и в getContents, и в getDescription
+								//Р”РѕР±Р°РІР»СЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё, С‚Р°Рє РєР°Рє РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРЅС‚РµРЅС‚ Рё РІ getContents, Рё РІ getDescription
 								if(entry.getContents().size() != 0)
 								{
 									if((entry.getDescription())!= null)
@@ -1108,7 +1108,7 @@ class database
 
 								if ((postCategories!=null)&&(!postCategories.isEmpty()))
 								{
-									Content +="\nТеги: ";
+									Content +="\nРўРµРіРё: ";
 									Contentbb +="\n[i][size=\"8\"]";
 									for (SyndCategoryImpl Cat : postCategories)
 									{
@@ -1123,7 +1123,7 @@ class database
 								Contentbb +="[/quote]\n";
 								Content +="\n------------------------------------------------------------------\n";
 							}
-							//Сохраняем новую дату публикации
+							//РЎРѕС…СЂР°РЅСЏРµРј РЅРѕРІСѓСЋ РґР°С‚Сѓ РїСѓР±Р»РёРєР°С†РёРё
 							synchronized (Mutex) {
 								//System.out.println("Entered Mutex Refresh");
 								Update=Update.replaceAll("'", "''");
@@ -1248,7 +1248,7 @@ class database
 			}
 		}catch(Exception e){LOG.error("ERROR_URL:",e);}
 
-		//Добавляем в List сообщения с бб кодами и без бб кодов
+		//Р”РѕР±Р°РІР»СЏРµРј РІ List СЃРѕРѕР±С‰РµРЅРёСЏ СЃ Р±Р± РєРѕРґР°РјРё Рё Р±РµР· Р±Р± РєРѕРґРѕРІ
 		msg="";
 		msg_bboff="";
 		
@@ -1304,22 +1304,22 @@ class database
 		return message;
 	}
 	
-	//Получаем последнюю запись прямо из БД
+	//РџРѕР»СѓС‡Р°РµРј РїРѕСЃР»РµРґРЅСЋСЋ Р·Р°РїРёСЃСЊ РїСЂСЏРјРѕ РёР· Р‘Р”
 	public String getLast(String jid, String strid)
 	{
-		String message = "";//Получить бб-режим для пользователя
+		String message = "";//РџРѕР»СѓС‡РёС‚СЊ Р±Р±-СЂРµР¶РёРј РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 		Long Sub_id;
-		try {Sub_id = new Long(strid);}catch(NumberFormatException e){LOG.info("Status: ERROR ID");message="Ошибка, проверьте правильность вводимых данных.";return message;}
+		try {Sub_id = new Long(strid);}catch(NumberFormatException e){LOG.info("Status: ERROR ID");message="РћС€РёР±РєР°, РїСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РІРІРѕРґРёРјС‹С… РґР°РЅРЅС‹С….";return message;}
 		try {
 			ResultSet rs;
 			synchronized (Mutex) {
-				//Проверяем просмотр своей подписки, для этого jid и id подписки должны быть равны
+				//РџСЂРѕРІРµСЂСЏРµРј РїСЂРѕСЃРјРѕС‚СЂ СЃРІРѕРµР№ РїРѕРґРїРёСЃРєРё, РґР»СЏ СЌС‚РѕРіРѕ jid Рё id РїРѕРґРїРёСЃРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЂР°РІРЅС‹
 				rs = st.executeQuery("SELECT BB, RSS_last_content, RSS_lastbb_content FROM SUBS INNER JOIN USERS ON USERS.User_id=SUBS.User_id INNER JOIN RSS ON SUBS.RSS_id=RSS.RSS_id WHERE Sub_id="+Sub_id+" AND Jabber='"+jid+"';");
 				if (rs.next()) {
 					byte[] Content = rs.getBytes("RSS_last_content");
 					byte[] Contentbb = rs.getBytes("RSS_lastbb_content");
 					if (rs.wasNull()) {
-						message="Нет записей.";
+						message="РќРµС‚ Р·Р°РїРёСЃРµР№.";
 					}
 					else {
 						try {
@@ -1329,11 +1329,11 @@ class database
 							else {
 								message=new String(Contentbb,"UTF-8");
 							}
-						}catch(UnsupportedEncodingException e){LOG.error("ERROR_ERROR:",e);message="Нет записей.";return message;}
+						}catch(UnsupportedEncodingException e){LOG.error("ERROR_ERROR:",e);message="РќРµС‚ Р·Р°РїРёСЃРµР№.";return message;}
 					}
 				}
 				else {
-					message="Подписка не найдена.";
+					message="РџРѕРґРїРёСЃРєР° РЅРµ РЅР°Р№РґРµРЅР°.";
 				}
 				Mutex.notify();
 			}
@@ -1341,13 +1341,13 @@ class database
 		return message;
 	}
 	
-	//Получаем список пользователей подписаных на указаную ленту без паузы и с указанным режимом ББ кодов 
+	//РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РїРѕРґРїРёСЃР°РЅС‹С… РЅР° СѓРєР°Р·Р°РЅСѓСЋ Р»РµРЅС‚Сѓ Р±РµР· РїР°СѓР·С‹ Рё СЃ СѓРєР°Р·Р°РЅРЅС‹Рј СЂРµР¶РёРјРѕРј Р‘Р‘ РєРѕРґРѕРІ 
 	public List<String> listRSSUsers(long RSS_id, int BB, int conf)
 	{
 		List<String> rss_users = new ArrayList<String>();
 		try 
 		{
-			//Получаем список пользователей, подписанных на этот RSS, без паузы и с указанным режимом BB
+			//РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№, РїРѕРґРїРёСЃР°РЅРЅС‹С… РЅР° СЌС‚РѕС‚ RSS, Р±РµР· РїР°СѓР·С‹ Рё СЃ СѓРєР°Р·Р°РЅРЅС‹Рј СЂРµР¶РёРјРѕРј BB
 			synchronized (Mutex)
 			{
 				ResultSet rs = st.executeQuery("SELECT Jabber FROM SUBS INNER JOIN USERS ON USERS.User_id=SUBS.User_id WHERE RSS_id="+RSS_id+" AND Sub_pause=0 AND Is_conf="+conf+" AND BB="+BB+";");
@@ -1362,44 +1362,44 @@ class database
 		return rss_users;
 	}
 	
-	//Устанавливаем/отключаем паузу для всех подписок 
+	//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј/РѕС‚РєР»СЋС‡Р°РµРј РїР°СѓР·Сѓ РґР»СЏ РІСЃРµС… РїРѕРґРїРёСЃРѕРє 
 	public String setPause(String jid, int pause)
 	{
 		String message = "";
 		try 
 		{
-			//Используя всю силу SQL тупо ставим паузы на все подписки этого жида :D
+			//РСЃРїРѕР»СЊР·СѓСЏ РІСЃСЋ СЃРёР»Сѓ SQL С‚СѓРїРѕ СЃС‚Р°РІРёРј РїР°СѓР·С‹ РЅР° РІСЃРµ РїРѕРґРїРёСЃРєРё СЌС‚РѕРіРѕ Р¶РёРґР° :D
 			synchronized (Mutex)
 			{
 				st.executeUpdate("UPDATE SUBS SET Sub_pause="+pause+" WHERE User_id=(SELECT User_id FROM USERS WHERE Jabber='"+jid+"');");
 				Mutex.notify();
 			}
-			LOG.info("Общая пауза: "+jid);
-			if(pause!=0){message="Общая пауза для всех подписок включена.";}
-			else{message="Общая пауза для всех подписок выключена.";}			
-		}catch(Exception e){LOG.error("ERROR_PAUSE:",e);message="Ошибка включения/выключения паузы.";}
+			LOG.info("РћР±С‰Р°СЏ РїР°СѓР·Р°: "+jid);
+			if(pause!=0){message="РћР±С‰Р°СЏ РїР°СѓР·Р° РґР»СЏ РІСЃРµС… РїРѕРґРїРёСЃРѕРє РІРєР»СЋС‡РµРЅР°.";}
+			else{message="РћР±С‰Р°СЏ РїР°СѓР·Р° РґР»СЏ РІСЃРµС… РїРѕРґРїРёСЃРѕРє РІС‹РєР»СЋС‡РµРЅР°.";}			
+		}catch(Exception e){LOG.error("ERROR_PAUSE:",e);message="РћС€РёР±РєР° РІРєР»СЋС‡РµРЅРёСЏ/РІС‹РєР»СЋС‡РµРЅРёСЏ РїР°СѓР·С‹.";}
 		return message;
 	}
-	//Отключение/включение бб кодов
+	//РћС‚РєР»СЋС‡РµРЅРёРµ/РІРєР»СЋС‡РµРЅРёРµ Р±Р± РєРѕРґРѕРІ
 	public String BBcode(String jid, int bbmode)
 	{
 		String message = "";
 		try 
 		{
-			//Используя новую структуру меняем одно быдло-значение. Привет быдлокоду Благина!
+			//РСЃРїРѕР»СЊР·СѓСЏ РЅРѕРІСѓСЋ СЃС‚СЂСѓРєС‚СѓСЂСѓ РјРµРЅСЏРµРј РѕРґРЅРѕ Р±С‹РґР»Рѕ-Р·РЅР°С‡РµРЅРёРµ. РџСЂРёРІРµС‚ Р±С‹РґР»РѕРєРѕРґСѓ Р‘Р»Р°РіРёРЅР°!
 			synchronized (Mutex)
 			{
 				st.executeUpdate("UPDATE USERS SET BB="+bbmode+" WHERE Jabber='"+jid+"';");
 				Mutex.notify();
 			}
-			LOG.info("Отключение/включение бб кодов: "+jid);
-			if(bbmode!=0){message="BB коды включены.";}
-			else{message="BB коды выключены.";}			
-		}catch(Exception e){LOG.error("ERROR_PAUSE:",e);message="Ошибка включения/выключения BB кодов.";}
+			LOG.info("РћС‚РєР»СЋС‡РµРЅРёРµ/РІРєР»СЋС‡РµРЅРёРµ Р±Р± РєРѕРґРѕРІ: "+jid);
+			if(bbmode!=0){message="BB РєРѕРґС‹ РІРєР»СЋС‡РµРЅС‹.";}
+			else{message="BB РєРѕРґС‹ РІС‹РєР»СЋС‡РµРЅС‹.";}			
+		}catch(Exception e){LOG.error("ERROR_PAUSE:",e);message="РћС€РёР±РєР° РІРєР»СЋС‡РµРЅРёСЏ/РІС‹РєР»СЋС‡РµРЅРёСЏ BB РєРѕРґРѕРІ.";}
 		return message;
 	}
 
-	//Считаем ленты с паузой и без
+	//РЎС‡РёС‚Р°РµРј Р»РµРЅС‚С‹ СЃ РїР°СѓР·РѕР№ Рё Р±РµР·
 	public String countUserRSS(String jid){
 		String msg = "";
 		ResultSet rs;
@@ -1418,7 +1418,7 @@ class database
 		return msg;
 	}
 	
-	//Получаем ленты на которые подписан пользователь
+	//РџРѕР»СѓС‡Р°РµРј Р»РµРЅС‚С‹ РЅР° РєРѕС‚РѕСЂС‹Рµ РїРѕРґРїРёСЃР°РЅ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
 	public String listUserRSS(String jid, int bbmode)
 	{
 		String msg = "";
@@ -1428,7 +1428,7 @@ class database
 			//SELECT Sub_id, RSS_link, Sub_pause FROM RSS INNER JOIN SUBS ON SUBS.RSS_id=RSS.RSS_id INNER JOIN USERS ON USERS.User_id=SUBS.User_id WHERE Jabber='commaster@qip.ru';
 			if (bbmode==0)
 			{
-				msg += "Ваши каналы (Your feeds): ";
+				msg += "Р’Р°С€Рё РєР°РЅР°Р»С‹ (Your feeds): ";
 				synchronized (Mutex)
 				{
 					rs = st.executeQuery("SELECT BB FROM USERS WHERE Jabber='"+jid+"';");
@@ -1436,20 +1436,20 @@ class database
 					{
 						if (rs.getLong("BB")==0)
 						{
-							msg += "(BB-коды выключены)";
+							msg += "(BB-РєРѕРґС‹ РІС‹РєР»СЋС‡РµРЅС‹)";
 						}
 						else if (rs.getLong("BB")==1)
 						{
-							msg += "(BB-коды включены)";
+							msg += "(BB-РєРѕРґС‹ РІРєР»СЋС‡РµРЅС‹)";
 						}
 						else
 						{
-							msg += "(BB-коды неадекватны, сообщите разработчику)";
+							msg += "(BB-РєРѕРґС‹ РЅРµР°РґРµРєРІР°С‚РЅС‹, СЃРѕРѕР±С‰РёС‚Рµ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєСѓ)";
 						}
 					}
 					else
 					{
-						msg += "(BB-коды неадекватны, сообщите разработчику)";
+						msg += "(BB-РєРѕРґС‹ РЅРµР°РґРµРєРІР°С‚РЅС‹, СЃРѕРѕР±С‰РёС‚Рµ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєСѓ)";
 					}
 					rs.close();
 					msg += "\n";
@@ -1458,7 +1458,7 @@ class database
 			}
 			else
 			{
-				msg += "[table][tr][th width=30]ID[/th][th]Адрес/Address[/th][th width=90]Пауза/Pause[/th][/tr]";
+				msg += "[table][tr][th width=30]ID[/th][th]РђРґСЂРµСЃ/Address[/th][th width=90]РџР°СѓР·Р°/Pause[/th][/tr]";
 			}
 			
 			synchronized (Mutex)
@@ -1466,20 +1466,20 @@ class database
 				rs = st.executeQuery("SELECT Sub_id, RSS_link, Sub_pause FROM RSS INNER JOIN SUBS ON SUBS.RSS_id=RSS.RSS_id INNER JOIN USERS ON USERS.User_id=SUBS.User_id WHERE Jabber='"+jid+"';");
 				if (bbmode==0)
 				{
-					msg += "ID - Адрес RSS - Статус\n";
+					msg += "ID - РђРґСЂРµСЃ RSS - РЎС‚Р°С‚СѓСЃ\n";
 				}
 				while(rs.next())
 				{
 					if (bbmode==0)
 					{
 						msg += rs.getLong("Sub_id")+" "+rs.getString("RSS_link")+" - ";
-						if (rs.getLong("Sub_pause")==0) {msg += "доставка";} else {msg += "приостановлено";}
+						if (rs.getLong("Sub_pause")==0) {msg += "РґРѕСЃС‚Р°РІРєР°";} else {msg += "РїСЂРёРѕСЃС‚Р°РЅРѕРІР»РµРЅРѕ";}
 						msg += "\n";
 					}
 					else
 					{
 						msg += "[tr][td][center]"+rs.getLong("Sub_id")+"[/center][/td][td]"+rs.getString("RSS_link")+"[/td][td][center]";
-						if (rs.getLong("Sub_pause")==0) {msg += "Выкл/OFF";} else {msg += "Вкл/ON";}
+						if (rs.getLong("Sub_pause")==0) {msg += "Р’С‹РєР»/OFF";} else {msg += "Р’РєР»/ON";}
 						msg += "[/center][/td][/tr]";
 					}
 				}
@@ -1494,7 +1494,7 @@ class database
 		return msg;
 	}
 	
-	//Сохраняем RSS ленту, подписываем
+	//РЎРѕС…СЂР°РЅСЏРµРј RSS Р»РµРЅС‚Сѓ, РїРѕРґРїРёСЃС‹РІР°РµРј
 	public int addSub(String RSS_link, String jid)
 	{
 		LOG.info("---------------------------------------------");
@@ -1509,13 +1509,13 @@ class database
 				ResultSet rs;
 				synchronized (Mutex)
 				{
-					rs = st.executeQuery("SELECT RSS_id FROM RSS WHERE RSS_link='"+RSS_link+"'");//Узнаем ключ RSS
-					if(!rs.next())//Лента новая, сохраняем.
+					rs = st.executeQuery("SELECT RSS_id FROM RSS WHERE RSS_link='"+RSS_link+"'");//РЈР·РЅР°РµРј РєР»СЋС‡ RSS
+					if(!rs.next())//Р›РµРЅС‚Р° РЅРѕРІР°СЏ, СЃРѕС…СЂР°РЅСЏРµРј.
 					{
 						LOG.info("New feed");
 						st.executeUpdate("INSERT INTO RSS (RSS_link) VALUES ('"+RSS_link+"');"/*,Statement.RETURN_GENERATED_KEYS*/);
 						LOG.info("New feed is up");
-						rs = st.executeQuery("SELECT RSS_id FROM RSS WHERE RSS_link='"+RSS_link+"'");//Узнаем ключ RSS
+						rs = st.executeQuery("SELECT RSS_id FROM RSS WHERE RSS_link='"+RSS_link+"'");//РЈР·РЅР°РµРј РєР»СЋС‡ RSS
 						RSS_id=rs.getLong("RSS_id");
 						i = 1;
 					}
@@ -1524,19 +1524,19 @@ class database
 						RSS_id=rs.getLong("RSS_id");
 					}
 					rs.close();
-					//Лента уже есть в списке, делаем подписку
+					//Р›РµРЅС‚Р° СѓР¶Рµ РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ, РґРµР»Р°РµРј РїРѕРґРїРёСЃРєСѓ
 					if (i==0) {LOG.info("New user for feed: "+RSS_link);}
-					//Проверить подписку
+					//РџСЂРѕРІРµСЂРёС‚СЊ РїРѕРґРїРёСЃРєСѓ
 					rs = st.executeQuery("SELECT Sub_id FROM SUBS INNER JOIN USERS ON USERS.User_id=SUBS.User_id WHERE Jabber='"+jid+"' AND RSS_id="+RSS_id+";");
 					if(!rs.next())
 					{
-						//Подписываем пользователя
+						//РџРѕРґРїРёСЃС‹РІР°РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 						st.executeUpdate("INSERT INTO SUBS (User_id, RSS_id) SELECT User_id,"+RSS_id+" FROM USERS WHERE Jabber='"+jid+"';");
 						i = 1;
 					}
 					else
 					{
-						i = 2;/*Уже подписан, повторно посылает*/
+						i = 2;/*РЈР¶Рµ РїРѕРґРїРёСЃР°РЅ, РїРѕРІС‚РѕСЂРЅРѕ РїРѕСЃС‹Р»Р°РµС‚*/
 					}
 					rs.close();
 					Mutex.notify();
@@ -1547,7 +1547,7 @@ class database
 		return i;
 	}
 	
-	//Удаление подписки пользователя + проверка, на пустые каналы без пользователей
+	//РЈРґР°Р»РµРЅРёРµ РїРѕРґРїРёСЃРєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ + РїСЂРѕРІРµСЂРєР°, РЅР° РїСѓСЃС‚С‹Рµ РєР°РЅР°Р»С‹ Р±РµР· РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
 	public int delSub(String jid, String strid)
 	{
 		LOG.info("---------------------------------------------");
@@ -1560,7 +1560,7 @@ class database
 			ResultSet rs;
 			synchronized (Mutex)
 			{
-				//Проверяем, удаляет ли он именно свою подписку
+				//РџСЂРѕРІРµСЂСЏРµРј, СѓРґР°Р»СЏРµС‚ Р»Рё РѕРЅ РёРјРµРЅРЅРѕ СЃРІРѕСЋ РїРѕРґРїРёСЃРєСѓ
 				rs = st.executeQuery("SELECT Sub_id FROM SUBS INNER JOIN USERS ON USERS.User_id=SUBS.User_id WHERE Sub_id="+Sub_id+" AND Jabber='"+jid+"';");
 				if(rs.next())
 				{
@@ -1572,7 +1572,7 @@ class database
 				rs.close();
 				Mutex.notify();
 			}
-			//Проверка на пустые подписки
+			//РџСЂРѕРІРµСЂРєР° РЅР° РїСѓСЃС‚С‹Рµ РїРѕРґРїРёСЃРєРё
 			deleteEmpty();
 		}catch(Exception e){LOG.error("ERROR_SQL:",e);}
 		if(i==1){LOG.info("Status: ERROR ID");}
@@ -1581,35 +1581,35 @@ class database
 		return i;
 	}
 	
-	//Устанавливаем паузу для конкретной ленты пользователя
+	//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїР°СѓР·Сѓ РґР»СЏ РєРѕРЅРєСЂРµС‚РЅРѕР№ Р»РµРЅС‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 	public String pauseSub(String jid, String strid)
 	{
 		String message = "";
 		LOG.info("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
 		LOG.info("PAUSE a feed: "+jid+" id: "+strid);
 		Long Sub_id;
-		try {Sub_id = new Long(strid);}catch(NumberFormatException e){LOG.info("Status: ERROR ID");return "Ошибка, проверьте правильность вводимых данных.";}
+		try {Sub_id = new Long(strid);}catch(NumberFormatException e){LOG.info("Status: ERROR ID");return "РћС€РёР±РєР°, РїСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РІРІРѕРґРёРјС‹С… РґР°РЅРЅС‹С….";}
 		try
 		{
 			ResultSet rs;
 			synchronized (Mutex) 
 			{
-				//Проверяем паузу ставит он именно свою подписку, для этого jid и id подписки должны быть равны
+				//РџСЂРѕРІРµСЂСЏРµРј РїР°СѓР·Сѓ СЃС‚Р°РІРёС‚ РѕРЅ РёРјРµРЅРЅРѕ СЃРІРѕСЋ РїРѕРґРїРёСЃРєСѓ, РґР»СЏ СЌС‚РѕРіРѕ jid Рё id РїРѕРґРїРёСЃРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЂР°РІРЅС‹
 				rs = st.executeQuery("SELECT SUBS.User_id, Sub_pause FROM SUBS INNER JOIN USERS ON USERS.User_id=SUBS.User_id WHERE Sub_id="+Sub_id+" AND Jabber='"+jid+"';");
 				if(rs.next())
 	            {
 					if(rs.getLong("Sub_pause")==0)
 					{
 						st.executeUpdate("UPDATE SUBS SET Sub_pause=1 WHERE User_id="+rs.getLong("User_id")+";");
-						message="Пауза для подписки "+Sub_id+" включена.";
+						message="РџР°СѓР·Р° РґР»СЏ РїРѕРґРїРёСЃРєРё "+Sub_id+" РІРєР»СЋС‡РµРЅР°.";
 					}else
 					{
 						st.executeUpdate("UPDATE SUBS SET Sub_pause=0 WHERE User_id="+rs.getLong("User_id")+";");
-						message="Пауза для подписки "+Sub_id+" выключена.";
+						message="РџР°СѓР·Р° РґР»СЏ РїРѕРґРїРёСЃРєРё "+Sub_id+" РІС‹РєР»СЋС‡РµРЅР°.";
 					}									
 	            }
 				else
-				{message="Ошибка, проверьте правильность вводимых данных.";}		
+				{message="РћС€РёР±РєР°, РїСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РІРІРѕРґРёРјС‹С… РґР°РЅРЅС‹С….";}		
 				rs.close();
 				Mutex.notify();
 			}
@@ -1618,7 +1618,7 @@ class database
 		return message;
 	}
 	
-	//Узнаем сообщение об ошибке
+	//РЈР·РЅР°РµРј СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
 	public String getError(long RSS_id)
 	{
 		ResultSet rs;
@@ -1652,7 +1652,7 @@ class database
 		return "DB error";
 	}
 	
-	//Узнаем линк на ленту
+	//РЈР·РЅР°РµРј Р»РёРЅРє РЅР° Р»РµРЅС‚Сѓ
 	public String getLink(long RSS_id)
 	{
 		ResultSet rs;
@@ -1679,7 +1679,7 @@ class database
 		return "UNKNOWN";
 	}
 
-	//Админ починил ленту, размораживаем
+	//РђРґРјРёРЅ РїРѕС‡РёРЅРёР» Р»РµРЅС‚Сѓ, СЂР°Р·РјРѕСЂР°Р¶РёРІР°РµРј
 	public void pardonRSS(long RSS_id)
 	{
 		try
@@ -1692,24 +1692,24 @@ class database
 		}catch(SQLException e){LOG.error("ERROR_SQL:",e);}
 	}
 	
-	//Удаляем пустые подписки, каналы на которые ни кто не подписан
+	//РЈРґР°Р»СЏРµРј РїСѓСЃС‚С‹Рµ РїРѕРґРїРёСЃРєРё, РєР°РЅР°Р»С‹ РЅР° РєРѕС‚РѕСЂС‹Рµ РЅРё РєС‚Рѕ РЅРµ РїРѕРґРїРёСЃР°РЅ
 	public void deleteEmpty()
 	{
 		LOG.info("---------------------------------------------");
 		LOG.info("Remove empty subscriptions START");
 		ResultSet rs;
-		for (long RSS_id : listRSSFeeds())//Получить id всех каналов из таблицы RSS_feeds
+		for (long RSS_id : listRSSFeeds())//РџРѕР»СѓС‡РёС‚СЊ id РІСЃРµС… РєР°РЅР°Р»РѕРІ РёР· С‚Р°Р±Р»РёС†С‹ RSS_feeds
 		{
 			try
 			{
-				//Проверить, есть ли RSS_id в таблице SUBS. Если нету - пустая лента
+				//РџСЂРѕРІРµСЂРёС‚СЊ, РµСЃС‚СЊ Р»Рё RSS_id РІ С‚Р°Р±Р»РёС†Рµ SUBS. Р•СЃР»Рё РЅРµС‚Сѓ - РїСѓСЃС‚Р°СЏ Р»РµРЅС‚Р°
 				synchronized (Mutex)
 				{
 					rs = st.executeQuery("SELECT User_id,Needs_syntax_recheck FROM SUBS INNER JOIN RSS ON SUBS.RSS_id=RSS.RSS_id WHERE SUBS.RSS_id="+RSS_id+";");
 					if(!rs.next())
 		            {
 						LOG.info("Empty feed: "+RSS_id);
-						//Удалить запись из таблицы RSS
+						//РЈРґР°Р»РёС‚СЊ Р·Р°РїРёСЃСЊ РёР· С‚Р°Р±Р»РёС†С‹ RSS
 						st.executeUpdate("DELETE FROM RSS WHERE RSS_id="+RSS_id+" AND Needs_syntax_recheck=0;");
 					}
 					rs.close();
@@ -1721,7 +1721,7 @@ class database
 		LOG.info("---------------------------------------------");
 	}
 	
-	//Поиск пользователя по jid
+	//РџРѕРёСЃРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ jid
 	public boolean isUser(String JID)
 	{
 		ResultSet rs;
@@ -1747,7 +1747,7 @@ class database
 		return false;
 	}
 	
-	//Добавление пользователя по jid
+	//Р”РѕР±Р°РІР»РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ jid
 	public void addUser(String JID, int conf)
 	{
 		try
@@ -1760,7 +1760,7 @@ class database
 		}catch(SQLException e){LOG.error("ERROR_SQL:",e);}
 	}
 	
-	//Изменение группы пользователя
+	//РР·РјРµРЅРµРЅРёРµ РіСЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 	public boolean setUGroup(String JID, String UGroup)
 	{
 		try
@@ -1774,7 +1774,7 @@ class database
 		return true;
 	}
 	
-	//Получение группы пользователя
+	//РџРѕР»СѓС‡РµРЅРёРµ РіСЂСѓРїРїС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 	public String getUGroup(String JID)
 	{
 		ResultSet rs;
@@ -1801,7 +1801,7 @@ class database
 		return "UNKNOWN";
 	}
 	
-	//Удаление пользователя и его подписок по jid
+	//РЈРґР°Р»РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё РµРіРѕ РїРѕРґРїРёСЃРѕРє РїРѕ jid
 	public void remUser(String JID)
 	{
 		LOG.info("---------------------------------------------");
@@ -1932,7 +1932,7 @@ class database
 		return answer;
 	}
 	
-	//Проверка работы БД
+	//РџСЂРѕРІРµСЂРєР° СЂР°Р±РѕС‚С‹ Р‘Р”
 	public void ping()
 	{
 		try
