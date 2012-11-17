@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-//import java.util.Random;
 import java.lang.Math;
 import java.io.*;
 
@@ -19,8 +18,6 @@ import org.jivesoftware.smackx.muc.*;
 import org.jivesoftware.smackx.packet.*;
 
 import org.apache.log4j.Logger;
-
-import rss2bb.sec.*;
 
 class CiteExtension implements PacketExtension {
     @SuppressWarnings("rawtypes")

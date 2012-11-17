@@ -8,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-//import java.text.DateFormat;
-//import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
@@ -23,8 +21,6 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
-
-import rss2bb.sec.*;
 
 class database
 {
@@ -1339,6 +1335,7 @@ class database
 				else {
 					message="Подписка не найдена.";
 				}
+				Mutex.notify();
 			}
 		}catch(Exception e){LOG.error("ERROR_SQL1:",e);}
 		return message;
